@@ -342,46 +342,32 @@ function initShowMoreButton(){
   });
 }
 
-/* ---------- 0. ВИДЕО В ШАПКЕ (плавная смена роликов по кругу) ---------- */
-function initHeroVideo(){
-  const videos = [
-    document.getElementById('heroVideo0'),
-    document.getElementById('heroVideo1'),
-    document.getElementById('heroVideo2')
-  ].filter(Boolean);
+/* ---------- 0. ВИДЕО-СЛАЙДЕР В ШАПКЕ ---------- */
+function initVideoSlider(){
+  const track = document.getElementById('videoSliderTrack');
+  const leftBtn = document.getElementById('videoSliderLeft');
+  const rightBtn = document.getElementById('videoSliderRight');
 
-  if (videos.length === 0) return;
+  if (!track) return;
 
-  let current = 0;
-
-  function playCurrent(){
-    const v = videos[current];
-    v.currentTime = 0;
-    v.play().catch(() => {
-      // если браузер заблокировал автоплей — не критично, просто останется первый кадр
-    });
+  // каждое видео уже само по себе зациклено (атрибут loop) —
+  // здесь только прокрутка стрелками влево/вправо
+  function slideStep(){
+    const firstSlide = track.querySelector('.video-slide');
+    return firstSlide ? firstSlide.offsetWidth + 24 : 300; // +24 = gap между слайдами
   }
 
-  function goToNext(){
-    const prevIndex = current;
-    current = (current + 1) % videos.length;
-
-    videos[current].currentTime = 0;
-    videos[current].classList.add('is-active');
-    videos[prevIndex].classList.remove('is-active');
-    playCurrent();
-  }
-
-  videos.forEach((v, i) => {
-    v.addEventListener('ended', goToNext);
+  leftBtn.addEventListener('click', () => {
+    track.scrollBy({ left: -slideStep(), behavior: 'smooth' });
   });
-
-  playCurrent();
+  rightBtn.addEventListener('click', () => {
+    track.scrollBy({ left: slideStep(), behavior: 'smooth' });
+  });
 }
 
 /* ---------- ИНИЦИАЛИЗАЦИЯ ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-  initHeroVideo();
+  initVideoSlider();
   initLanguageSwitcher();
   initCarousel();
   initBeforeAfter();
