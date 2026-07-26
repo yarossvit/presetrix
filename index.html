@@ -3,405 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Presetrix — Lightroom Presets (Light)</title>
-<style>
-  :root{
-    --bg:#faf8f4;
-    --bg-soft:#f1ede4;
-    --card:#ffffff;
-    --accent:#b97a4a;
-    --accent-soft:#a8663a;
-    --text:#242220;
-    --muted:#847e73;
-    --border:rgba(0,0,0,0.08);
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Georgia','Times New Roman',serif;
-  }
-  a{color:inherit;text-decoration:none;}
-
-  /* ---------- HERO ---------- */
-  header{
-    text-align:center;
-    padding:80px 20px 40px;
-  }
-  .logo{
-    width:72px;
-    height:72px;
-    object-fit:contain;
-    margin-bottom:18px;
-  }
-  .eyebrow{
-    font-family:Arial,sans-serif;
-    font-size:0.75rem;
-    letter-spacing:3px;
-    text-transform:uppercase;
-    color:var(--accent);
-    margin-bottom:14px;
-  }
-  h1{
-    font-size:2.6rem;
-    font-weight:400;
-    letter-spacing:1px;
-    margin:0 0 14px;
-  }
-  header p{
-    font-family:Arial,sans-serif;
-    color:var(--muted);
-    font-size:0.95rem;
-    max-width:480px;
-    margin:0 auto;
-    letter-spacing:0.3px;
-  }
-
-  /* ---------- CAROUSEL ---------- */
-  .carousel-section{
-    padding:20px 0 60px;
-  }
-  .carousel-wrap{
-    position:relative;
-    width:100%;
-    max-width:1200px;
-    margin:0 auto;
-    padding:0 20px;
-  }
-  .carousel{
-    display:flex;
-    gap:0;
-    overflow-x:auto;
-    scroll-behavior:auto;
-    padding:20px 60px 30px 10px;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
-    user-select:none;
-  }
-  .carousel::-webkit-scrollbar{display:none;}
-
-  .card{
-    flex:0 0 auto;
-    width:270px;
-    border-radius:10px;
-    overflow:hidden;
-    background:var(--card);
-    box-shadow:0 10px 26px rgba(0,0,0,0.22);
-    border:3px solid var(--bg);
-    transition:transform .25s ease, box-shadow .25s ease, z-index 0s;
-    display:block;
-    position:relative;
-    z-index:1;
-  }
-  .card:not(:first-child){
-    margin-left:-90px;
-  }
-  .card:hover{
-    transform:translateY(-14px) scale(1.04);
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
-    z-index:20;
-  }
-  .card img{
-    width:100%;
-    height:300px;
-    object-fit:cover;
-    display:block;
-    pointer-events:none;
-  }
-
-
-
-  .nav-btn{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    background:rgba(20,20,20,0.75);
-    border:1px solid var(--border);
-    color:#f2efe9;
-    width:44px;
-    height:44px;
-    border-radius:50%;
-    font-size:1.2rem;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:5;
-    transition:background .2s;
-  }
-  .nav-btn:hover{background:rgba(217,160,102,0.85);}
-  .nav-left{left:0;}
-  .nav-right{right:0;}
-
-  /* ---------- BESTSELLERS SECTION ---------- */
-  .bestseller-section{
-    padding:20px 20px 60px;
-  }
-  .bestseller-inner{
-    max-width:1200px;
-    margin:0 auto;
-  }
-  .bestseller-title{
-    text-align:center;
-    font-size:1.8rem;
-    font-weight:400;
-    letter-spacing:1px;
-    margin-bottom:8px;
-  }
-  .bestseller-sub{
-    text-align:center;
-    font-family:Arial,sans-serif;
-    color:var(--muted);
-    font-size:0.9rem;
-    margin-bottom:40px;
-  }
-  .bestseller-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:28px;
-  }
-  .bestseller-card{
-    position:relative;
-    background:var(--card);
-    border:1px solid var(--accent);
-    border-radius:12px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    transition:transform .2s ease;
-  }
-  .bestseller-card:hover{
-    transform:translateY(-4px);
-  }
-  .bestseller-card img{
-    width:100%;
-    height:280px;
-    object-fit:cover;
-    display:block;
-  }
-  .bestseller-ribbon{
-    position:absolute;
-    top:14px;
-    left:-34px;
-    transform:rotate(-45deg);
-    background:var(--accent);
-    color:#fff;
-    font-family:Arial,sans-serif;
-    font-size:0.7rem;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    padding:5px 40px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-  }
-  .bestseller-card .info{
-    padding:16px 18px 20px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    flex:1;
-  }
-  .bestseller-card .name{
-    font-size:1.05rem;
-    letter-spacing:0.5px;
-  }
-  .bestseller-card .price{
-    font-family:Arial,sans-serif;
-    color:var(--accent-soft);
-    font-size:0.95rem;
-  }
-
-  /* ---------- FILTER TABS ---------- */
-  .filter-tabs{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:12px;
-    margin-bottom:44px;
-  }
-  .filter-tab{
-    font-family:Arial,sans-serif;
-    font-size:0.8rem;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    padding:10px 20px;
-    border:1px solid var(--border);
-    border-radius:999px;
-    background:var(--card);
-    color:var(--muted);
-    cursor:pointer;
-    transition:all .2s ease;
-  }
-  .filter-tab:hover{
-    border-color:var(--accent);
-    color:var(--accent);
-  }
-  .filter-tab.active{
-    background:var(--accent);
-    border-color:var(--accent);
-    color:#fff;
-  }
-
-  /* ---------- CATALOG ---------- */
-  .catalog-section{
-    padding:60px 20px 100px;
-    background:var(--bg-soft);
-    border-top:1px solid var(--border);
-  }
-  .catalog-inner{
-    max-width:1200px;
-    margin:0 auto;
-  }
-  .catalog-title{
-    text-align:center;
-    font-size:1.8rem;
-    font-weight:400;
-    letter-spacing:1px;
-    margin-bottom:8px;
-  }
-  .catalog-sub{
-    text-align:center;
-    font-family:Arial,sans-serif;
-    color:var(--muted);
-    font-size:0.9rem;
-    margin-bottom:50px;
-  }
-
-  .catalog-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:28px;
-  }
-  .shop-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:12px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    transition:transform .2s ease, border-color .2s ease;
-  }
-  .shop-card:hover{
-    transform:translateY(-4px);
-    border-color:var(--accent);
-  }
-  .shop-card img{
-    width:100%;
-    height:280px;
-    object-fit:cover;
-    display:block;
-  }
-  .shop-card .info{
-    padding:16px 18px 20px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    flex:1;
-  }
-  .shop-card .name{
-    font-size:1.05rem;
-    letter-spacing:0.5px;
-  }
-  .shop-card .price{
-    font-family:Arial,sans-serif;
-    color:var(--accent-soft);
-    font-size:0.95rem;
-  }
-  .buy-btn{
-    margin-top:auto;
-    display:inline-block;
-    text-align:center;
-    font-family:Arial,sans-serif;
-    font-size:0.8rem;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    padding:12px 16px;
-    border:1px solid var(--accent);
-    border-radius:6px;
-    color:var(--accent);
-    transition:background .2s ease, color .2s ease;
-  }
-  .buy-btn:hover{
-    background:var(--accent);
-    color:#141414;
-  }
-
-  footer{
-    text-align:center;
-    padding:50px 20px 40px;
-    font-family:Arial,sans-serif;
-    color:var(--muted);
-    font-size:0.8rem;
-    letter-spacing:1px;
-  }
-  .social-links{
-    display:flex;
-    justify-content:center;
-    gap:16px;
-    margin-bottom:20px;
-  }
-  .social-links a{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    border:1px solid var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:var(--muted);
-    transition:all .2s ease;
-  }
-  .social-links a:hover{
-    border-color:var(--accent);
-    color:var(--accent);
-    transform:translateY(-3px);
-  }
-  .social-links svg{
-    width:18px;
-    height:18px;
-    fill:currentColor;
-  }
-
-  @media (max-width:640px){
-    h1{font-size:1.9rem;}
-    .nav-btn{display:none;}
-    .card{width:190px;}
-    .card:not(:first-child){margin-left:-55px;}
-    .card img{height:280px;}
-  }
-</style>
+<title>Presetrix — Lightroom Presets</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <div class="lang-switch">
+    <button class="lang-btn" data-lang="ru">RU</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="ua">UA</button>
+  </div>
+
   <header>
     <img src="images/Logo_Black.png" alt="Presetrix" class="logo">
-    <div class="eyebrow">Mobile & Desktop Lightroom Presets</div>
+    <div class="eyebrow" data-i18n="eyebrow">Mobile & Desktop Lightroom Presets</div>
     <h1>Presetrix</h1>
-    <p>Готовые пресеты для любого настроения кадра — от свадеб до концертов. Выбирайте пак и переходите на Etsy для покупки.</p>
+    <p data-i18n="heroText">Ready-to-use presets for every mood.</p>
   </header>
 
   <section class="carousel-section">
     <div class="carousel-wrap" id="carouselWrap">
-      <button class="nav-btn nav-left" aria-label="Назад">&#10094;</button>
+      <button class="nav-btn nav-left" aria-label="Previous">&#10094;</button>
       <div class="carousel" id="carousel"></div>
-      <button class="nav-btn nav-right" aria-label="Вперёд">&#10095;</button>
+      <button class="nav-btn nav-right" aria-label="Next">&#10095;</button>
     </div>
   </section>
 
   <section class="bestseller-section">
     <div class="bestseller-inner">
-      <div class="bestseller-title">🔥 Хит продаж</div>
-      <div class="bestseller-sub">Самые популярные паки у наших клиентов</div>
+      <div class="section-title" data-i18n="bestsellerTitle">Best Sellers</div>
+      <div class="section-sub" data-i18n="bestsellerSub">The most popular packs</div>
       <div class="bestseller-grid" id="bestsellerGrid"></div>
     </div>
   </section>
 
   <section class="catalog-section">
     <div class="catalog-inner">
-      <div class="catalog-title">Все паки</div>
-      <div class="catalog-sub">Нажмите «Купить на Etsy», чтобы перейти к оплате</div>
+      <div class="section-title" data-i18n="catalogTitle">All Packs</div>
+      <div class="section-sub" data-i18n="catalogSub">Click Buy on Etsy</div>
       <div class="filter-tabs" id="filterTabs"></div>
       <div class="catalog-grid" id="catalogGrid"></div>
+      <div class="show-more-wrap" id="showMoreWrap">
+        <button class="show-more-btn" id="showMoreBtn">Show more</button>
+      </div>
     </div>
   </section>
 
@@ -420,154 +64,11 @@
         <svg viewBox="0 0 24 24"><path d="M8.6 3.5c-.2 0-.4.1-.5.3L6.4 6.2c-.1.2 0 .4.2.5l1 .4v10.8l-1 .4c-.2.1-.3.3-.2.5l1.7 2.4c.1.2.3.3.5.3h8.9c.3 0 .5-.2.6-.5l.6-3.6c0-.3-.2-.5-.5-.5h-1c-.2 0-.4.2-.5.4-.3 1.3-.7 2-1.8 2h-3.4c-.5 0-.7-.2-.7-.7v-4.5h2.4c.8 0 1 .5 1.2 1.3 0 .2.2.4.5.4h.9c.3 0 .5-.2.5-.5V10c0-.3-.2-.5-.5-.5h-.9c-.3 0-.4.2-.5.4-.2.8-.4 1.2-1.2 1.2h-2.4V6.9c0-.5.2-.6.7-.6h3.2c1 0 1.4.6 1.7 1.9 0 .2.3.4.5.4h1c.3 0 .5-.2.5-.5l-.5-3.4c0-.3-.3-.5-.6-.5H8.6z"/></svg>
       </a>
     </div>
-    © Presetrix — все пресеты продаются на Etsy
+    <span data-i18n="footerText">© Presetrix</span>
   </footer>
 
   <script src="packs-data.js"></script>
-  <script>
-    // ---------- Render carousel (INFINITE: pack list tripled for seamless loop) ----------
-    const carousel = document.getElementById('carousel');
-
-    function buildCard(pack){
-      const a = document.createElement('a');
-      a.className = 'card';
-      a.href = pack.etsyUrl;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.innerHTML = `<img src="images/${pack.image}" alt="${pack.name}">`;
-      return a;
-    }
-
-    // three copies back-to-back so we can always scroll seamlessly in either direction
-    for (let copy = 0; copy < 3; copy++){
-      PACKS.forEach(pack => carousel.appendChild(buildCard(pack)));
-    }
-
-    // ---------- Render "Хит продаж" showcase (separate block, not badges) ----------
-    const bestsellerGrid = document.getElementById('bestsellerGrid');
-    PACKS.filter(p => p.bestseller).forEach(pack => {
-      const card = document.createElement('div');
-      card.className = 'bestseller-card';
-      card.innerHTML = `
-        <div class="bestseller-ribbon">Хит</div>
-        <img src="images/${pack.image}" alt="${pack.name}">
-        <div class="info">
-          <div class="name">${pack.name}</div>
-          <div class="price">${pack.price}</div>
-          <a class="buy-btn" href="${pack.etsyUrl}" target="_blank" rel="noopener">Купить на Etsy</a>
-        </div>
-      `;
-      bestsellerGrid.appendChild(card);
-    });
-
-    // ---------- Filter tabs ----------
-    const CATEGORIES = ["Все", "Портретные", "Interiors", "Свадебные", "Seasonal", "Dark & Moody"];
-    const filterTabs = document.getElementById('filterTabs');
-    let activeCategory = "Все";
-
-    CATEGORIES.forEach(cat => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-tab' + (cat === activeCategory ? ' active' : '');
-      btn.textContent = cat;
-      btn.addEventListener('click', () => {
-        activeCategory = cat;
-        document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderCatalog();
-      });
-      filterTabs.appendChild(btn);
-    });
-
-    // ---------- Render full catalog grid (filterable, auto-grows with PACKS) ----------
-    const catalogGrid = document.getElementById('catalogGrid');
-
-    function renderCatalog(){
-      catalogGrid.innerHTML = '';
-      const list = activeCategory === "Все"
-        ? PACKS
-        : PACKS.filter(p => p.category === activeCategory);
-
-      list.forEach(pack => {
-        const card = document.createElement('div');
-        card.className = 'shop-card';
-        card.innerHTML = `
-          <img src="images/${pack.image}" alt="${pack.name}">
-          <div class="info">
-            <div class="name">${pack.name}</div>
-            <div class="price">${pack.price}</div>
-            <a class="buy-btn" href="${pack.etsyUrl}" target="_blank" rel="noopener">Купить на Etsy</a>
-          </div>
-        `;
-        catalogGrid.appendChild(card);
-      });
-    }
-    renderCatalog();
-
-    // ---------- Infinite loop setup ----------
-    // width of ONE copy of the pack list (measured after images may still be loading,
-    // so we recompute on load too in case sizes shift)
-    let singleSetWidth = carousel.scrollWidth / 3;
-    // start scrolled into the middle copy so both directions have room before wrapping
-    carousel.scrollLeft = singleSetWidth;
-
-    window.addEventListener('load', () => {
-      singleSetWidth = carousel.scrollWidth / 3;
-      carousel.scrollLeft = singleSetWidth;
-    });
-
-    function wrapScroll(){
-      if (carousel.scrollLeft >= singleSetWidth * 2){
-        carousel.scrollLeft -= singleSetWidth;
-      } else if (carousel.scrollLeft <= 0){
-        carousel.scrollLeft += singleSetWidth;
-      }
-    }
-
-    // ---------- Follow-the-cursor scrolling for hero carousel ----------
-    const wrap = document.getElementById('carouselWrap');
-    let mouseActive = false;
-    const DEAD_ZONE = 0.12;
-    const MAX_SPEED = 18;
-
-    wrap.addEventListener('mousemove', (e) => {
-      mouseActive = true;
-      const rect = wrap.getBoundingClientRect();
-      const relX = (e.clientX - rect.left) / rect.width;
-      const center = relX - 0.5;
-      let speed = 0;
-      if (Math.abs(center) > DEAD_ZONE / 2) {
-        const sign = center > 0 ? 1 : -1;
-        const strength = (Math.abs(center) - DEAD_ZONE / 2) / (0.5 - DEAD_ZONE / 2);
-        speed = sign * strength * MAX_SPEED;
-      }
-      carousel.dataset.speed = speed;
-    });
-    wrap.addEventListener('mouseleave', () => {
-      mouseActive = false;
-      carousel.dataset.speed = 0;
-    });
-
-    function tick(){
-      const speed = parseFloat(carousel.dataset.speed || 0);
-      if (mouseActive && speed !== 0) {
-        carousel.scrollLeft = carousel.scrollLeft + speed;
-        wrapScroll();
-      }
-      requestAnimationFrame(tick);
-    }
-    carousel.dataset.speed = 0;
-    tick();
-
-    const cardWidth = 180; // effective step per card, accounting for overlap
-    document.querySelector('.nav-left').addEventListener('click', () => {
-      carousel.scrollBy({left: -cardWidth * 2, behavior:'smooth'});
-      setTimeout(wrapScroll, 400);
-    });
-    document.querySelector('.nav-right').addEventListener('click', () => {
-      carousel.scrollBy({left: cardWidth * 2, behavior:'smooth'});
-      setTimeout(wrapScroll, 400);
-    });
-  </script>
+  <script src="main.js"></script>
 
 </body>
 </html>

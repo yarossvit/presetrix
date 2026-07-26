@@ -1,0 +1,277 @@
+/* =========================================================
+   PRESETRIX — MAIN LOGIC
+   =========================================================
+   Разделы этого файла:
+   1. Переводы (RU / EN / UA)
+   2. Переключение языка
+   3. Рендер карусели (бесконечная, с наведением мышки)
+   4. Рендер блока "Хит продаж"
+   5. Вкладки-фильтры + рендер каталога с кнопкой "Показать ещё"
+   ========================================================= */
+
+/* ---------- 1. ПЕРЕВОДЫ ---------- */
+const TRANSLATIONS = {
+  ru: {
+    eyebrow: "Мобильные и десктопные пресеты Lightroom",
+    heroText: "Готовые пресеты для любого настроения кадра — от свадеб до концертов. Выбирайте пак и переходите на Etsy для покупки.",
+    bestsellerTitle: "🔥 Хит продаж",
+    bestsellerSub: "Самые популярные паки у наших клиентов",
+    bestsellerRibbon: "Хит",
+    catalogTitle: "Все паки",
+    catalogSub: "Нажмите «Купить на Etsy», чтобы перейти к оплате",
+    buyBtn: "Купить на Etsy",
+    showMore: "Показать ещё",
+    showLess: "Свернуть",
+    footerText: "© Presetrix — все пресеты продаются на Etsy",
+    categories: {
+      all: "Все",
+      portraits: "Портретные",
+      interiors: "Interiors",
+      weddings: "Свадебные",
+      seasonal: "Seasonal",
+      darkmoody: "Dark & Moody"
+    }
+  },
+  en: {
+    eyebrow: "Mobile & Desktop Lightroom Presets",
+    heroText: "Ready-to-use presets for every mood — from weddings to concerts. Pick a pack and head to Etsy to purchase.",
+    bestsellerTitle: "🔥 Best Sellers",
+    bestsellerSub: "The most popular packs among our customers",
+    bestsellerRibbon: "Best",
+    catalogTitle: "All Packs",
+    catalogSub: "Click “Buy on Etsy” to proceed to checkout",
+    buyBtn: "Buy on Etsy",
+    showMore: "Show more",
+    showLess: "Show less",
+    footerText: "© Presetrix — all presets are sold on Etsy",
+    categories: {
+      all: "All",
+      portraits: "Portraits",
+      interiors: "Interiors",
+      weddings: "Weddings",
+      seasonal: "Seasonal",
+      darkmoody: "Dark & Moody"
+    }
+  },
+  ua: {
+    eyebrow: "Мобільні та десктопні пресети Lightroom",
+    heroText: "Готові пресети для будь-якого настрою кадру — від весіль до концертів. Обирайте пак і переходьте на Etsy для покупки.",
+    bestsellerTitle: "🔥 Хіт продажів",
+    bestsellerSub: "Найпопулярніші паки серед наших клієнтів",
+    bestsellerRibbon: "Хіт",
+    catalogTitle: "Усі паки",
+    catalogSub: "Натисніть «Купити на Etsy», щоб перейти до оплати",
+    buyBtn: "Купити на Etsy",
+    showMore: "Показати ще",
+    showLess: "Згорнути",
+    footerText: "© Presetrix — усі пресети продаються на Etsy",
+    categories: {
+      all: "Усі",
+      portraits: "Портретні",
+      interiors: "Interiors",
+      weddings: "Весільні",
+      seasonal: "Seasonal",
+      darkmoody: "Dark & Moody"
+    }
+  }
+};
+
+let currentLang = "ru";
+const CATEGORY_ORDER = ["all", "portraits", "interiors", "weddings", "seasonal", "darkmoody"];
+const INITIAL_VISIBLE = 9; // сколько паков показывать в каталоге до нажатия "Показать ещё"
+
+/* ---------- 2. ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ---------- */
+function setLanguage(lang){
+  currentLang = lang;
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+
+  const t = TRANSLATIONS[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  renderFilterTabs();
+  renderCatalog();
+  renderBestsellers();
+}
+
+function initLanguageSwitcher(){
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+  });
+}
+
+/* ---------- 3. КАРУСЕЛЬ (бесконечная, следует за мышкой) ---------- */
+function initCarousel(){
+  const carousel = document.getElementById('carousel');
+  const wrap = document.getElementById('carouselWrap');
+
+  function buildCard(pack){
+    const a = document.createElement('a');
+    a.className = 'carousel-card';
+    a.href = pack.etsyUrl;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.innerHTML = `<img src="images/${pack.image}" alt="${pack.name}">`;
+    return a;
+  }
+
+  // три копии подряд — чтобы можно было бесшовно крутить в любую сторону
+  for (let copy = 0; copy < 3; copy++){
+    PACKS.forEach(pack => carousel.appendChild(buildCard(pack)));
+  }
+
+  let singleSetWidth = carousel.scrollWidth / 3;
+  carousel.scrollLeft = singleSetWidth;
+
+  window.addEventListener('load', () => {
+    singleSetWidth = carousel.scrollWidth / 3;
+    carousel.scrollLeft = singleSetWidth;
+  });
+
+  function wrapScroll(){
+    if (carousel.scrollLeft >= singleSetWidth * 2){
+      carousel.scrollLeft -= singleSetWidth;
+    } else if (carousel.scrollLeft <= 0){
+      carousel.scrollLeft += singleSetWidth;
+    }
+  }
+
+  // следование за курсором мыши (оригинальная скорость, работает и над стрелками)
+  let mouseActive = false;
+  const DEAD_ZONE = 0.12;
+  const MAX_SPEED = 18;
+
+  wrap.addEventListener('mousemove', (e) => {
+    mouseActive = true;
+    const rect = wrap.getBoundingClientRect();
+    const relX = (e.clientX - rect.left) / rect.width;
+    const center = relX - 0.5;
+    let speed = 0;
+    if (Math.abs(center) > DEAD_ZONE / 2) {
+      const sign = center > 0 ? 1 : -1;
+      const strength = (Math.abs(center) - DEAD_ZONE / 2) / (0.5 - DEAD_ZONE / 2);
+      speed = sign * strength * MAX_SPEED;
+    }
+    carousel.dataset.speed = speed;
+  });
+  wrap.addEventListener('mouseleave', () => {
+    mouseActive = false;
+    carousel.dataset.speed = 0;
+  });
+
+  function tick(){
+    const speed = parseFloat(carousel.dataset.speed || 0);
+    if (mouseActive && speed !== 0) {
+      carousel.scrollLeft = carousel.scrollLeft + speed;
+      wrapScroll();
+    }
+    requestAnimationFrame(tick);
+  }
+  carousel.dataset.speed = 0;
+  tick();
+
+  const cardWidth = 180; // эффективный шаг с учётом нахлёста карточек
+  document.querySelector('.nav-left').addEventListener('click', () => {
+    carousel.scrollBy({left: -cardWidth * 2, behavior:'smooth'});
+    setTimeout(wrapScroll, 400);
+  });
+  document.querySelector('.nav-right').addEventListener('click', () => {
+    carousel.scrollBy({left: cardWidth * 2, behavior:'smooth'});
+    setTimeout(wrapScroll, 400);
+  });
+}
+
+/* ---------- 4. БЛОК "ХИТ ПРОДАЖ" ---------- */
+function buildShopCard(pack, extraClass, ribbonText){
+  const card = document.createElement('div');
+  card.className = 'shop-card' + (extraClass ? ' ' + extraClass : '');
+  const t = TRANSLATIONS[currentLang];
+  card.innerHTML = `
+    ${ribbonText ? `<div class="bestseller-ribbon">${ribbonText}</div>` : ''}
+    <img src="images/${pack.image}" alt="${pack.name}">
+    <div class="info">
+      <div class="name">${pack.name}</div>
+      <div class="price">${pack.price}</div>
+      <a class="buy-btn" href="${pack.etsyUrl}" target="_blank" rel="noopener">${t.buyBtn}</a>
+    </div>
+  `;
+  return card;
+}
+
+function renderBestsellers(){
+  const grid = document.getElementById('bestsellerGrid');
+  grid.innerHTML = '';
+  const t = TRANSLATIONS[currentLang];
+  PACKS.filter(p => p.bestseller).forEach(pack => {
+    grid.appendChild(buildShopCard(pack, 'bestseller-card', t.bestsellerRibbon));
+  });
+}
+
+/* ---------- 5. ВКЛАДКИ-ФИЛЬТРЫ + КАТАЛОГ С "ПОКАЗАТЬ ЕЩЁ" ---------- */
+let activeCategory = "all";
+let showAll = false;
+
+function renderFilterTabs(){
+  const wrap = document.getElementById('filterTabs');
+  wrap.innerHTML = '';
+  const t = TRANSLATIONS[currentLang];
+
+  CATEGORY_ORDER.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-tab' + (key === activeCategory ? ' active' : '');
+    btn.textContent = t.categories[key];
+    btn.addEventListener('click', () => {
+      activeCategory = key;
+      showAll = false; // сброс "показать ещё" при смене категории
+      renderFilterTabs();
+      renderCatalog();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderCatalog(){
+  const grid = document.getElementById('catalogGrid');
+  const showMoreWrap = document.getElementById('showMoreWrap');
+  const showMoreBtn = document.getElementById('showMoreBtn');
+  const t = TRANSLATIONS[currentLang];
+
+  grid.innerHTML = '';
+
+  const fullList = activeCategory === "all"
+    ? PACKS
+    : PACKS.filter(p => p.category === activeCategory);
+
+  const visibleList = showAll ? fullList : fullList.slice(0, INITIAL_VISIBLE);
+
+  visibleList.forEach(pack => {
+    grid.appendChild(buildShopCard(pack));
+  });
+
+  if (fullList.length > INITIAL_VISIBLE){
+    showMoreWrap.style.display = 'block';
+    showMoreBtn.textContent = showAll ? t.showLess : t.showMore;
+  } else {
+    showMoreWrap.style.display = 'none';
+  }
+}
+
+function initShowMoreButton(){
+  document.getElementById('showMoreBtn').addEventListener('click', () => {
+    showAll = !showAll;
+    renderCatalog();
+  });
+}
+
+/* ---------- ИНИЦИАЛИЗАЦИЯ ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  initLanguageSwitcher();
+  initCarousel();
+  initShowMoreButton();
+  setLanguage(currentLang); // это же вызовет renderFilterTabs / renderCatalog / renderBestsellers
+});
