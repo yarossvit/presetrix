@@ -6,12 +6,12 @@
 <title>Presetrix — Lightroom Presets</title>
 
   <!-- Иконка сайта (фавиконка) во вкладке браузера -->
-<link rel="icon" type="image/png" href="images/Logo_White.png">
+<link rel="icon" type="image/png" href="images/logo_white.png">
 
   <!-- Open Graph превью для закладок, мессенджеров и соцсетей -->
 <meta property="og:title" content="Presetrix — Mobile & Desktop Lightroom Presets">
 <meta property="og:description" content="Ready-to-use presets for every mood. Professional Lightroom presets for your photos.">
-<meta property="og:image" content="images/Logo_White.png">
+<meta property="og:image" content="images/logo_white.png">
 <meta property="og:type" content="website">
 
 <link rel="stylesheet" href="style.css">
@@ -33,7 +33,7 @@
   </div>
 
   <header>
-    <img src="images/Logo_White.png" alt="Presetrix" class="logo" id="logoImg">
+    <img src="images/logo_white.png" alt="Presetrix" class="logo" id="logoImg">
     <div class="eyebrow" data-i18n="eyebrow">Mobile & Desktop Lightroom Presets</div>
     <h1>Presetrix</h1>
     <p data-i18n="heroText">Ready-to-use presets for every mood.</p>
@@ -107,21 +107,35 @@
   <script src="main.js"></script>
   <script>
     const themeBtn = document.getElementById('themeBtn');
+    const logoImg = document.getElementById('logoImg');
     const currentTheme = localStorage.getItem('theme') || 'light';
+
+    function updateLogo(theme) {
+      if (logoImg) {
+        logoImg.src = theme === 'dark' ? 'images/logo_white.png' : 'images/logo_black.png';
+      }
+    }
+
     if (currentTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeBtn.textContent = '☀️';
+      updateLogo('dark');
+    } else {
+      updateLogo('light');
     }
+
     themeBtn.addEventListener('click', () => {
       let theme = document.documentElement.getAttribute('data-theme');
       if (theme === 'dark') {
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
         themeBtn.textContent = '🌙';
+        updateLogo('light');
       } else {
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
         themeBtn.textContent = '☀️';
+        updateLogo('dark');
       }
     });
   </script>
