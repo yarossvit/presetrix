@@ -156,6 +156,26 @@ function initCarousel(){
     }
   }
 
+  // ---- КОВЕРФЛОУ: центральный пак ровный и крупный,
+  // те что слева "стекают" вниз-влево, те что справа — вниз-вправо ----
+  const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
+  function updateCoverflow(){
+    const wrapRect = wrap.getBoundingClientRect();
+    const centerX = wrapRect.left + wrapRect.width / 2;
+    cards.forEach(card => {
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = cardRect.left + cardRect.width / 2;
+      const delta = cardCenter - centerX;
+      const norm = Math.max(-1, Math.min(1, delta / (wrapRect.width / 2)));
+      const dist = Math.abs(norm);
+      const translateY = dist * 46;      // чем дальше от центра, тем ниже
+      const rotate = norm * 10;           // слева — против часовой, справа — по часовой
+      const scale = 1 - dist * 0.16;
+      card.style.transform = `translateY(${translateY}px) rotate(${rotate}deg) scale(${scale})`;
+      card.style.zIndex = Math.round((1 - dist) * 100) + 1;
+    });
+  }
+
   // следование за курсором мыши (оригинальная скорость, работает и над стрелками)
   let mouseActive = false;
   const DEAD_ZONE = 0.12;
@@ -185,10 +205,13 @@ function initCarousel(){
       carousel.scrollLeft = carousel.scrollLeft + speed;
       wrapScroll();
     }
+    updateCoverflow();
     requestAnimationFrame(tick);
   }
   carousel.dataset.speed = 0;
   tick();
+  window.addEventListener('resize', updateCoverflow);
+  window.addEventListener('load', updateCoverflow);
 
   const cardWidth = 180; // эффективный шаг с учётом нахлёста карточек
   wrap.querySelector('.nav-left').addEventListener('click', () => {
@@ -354,11 +377,13 @@ function initVideoSlider(){
   const total = slides.length;
   let index = 0;
 
-  // Показываем только одно видео за раз (по центру, в размер блока),
-  // переключение стрелками — через translateX, а не свободный скролл.
+  // Видео всегда остаётся на одном месте — переключаем только то,
+  // какой слайд видимый (плавный переход прозрачности), без сдвига блока.
   function goTo(i){
     index = (i + total) % total;
-    track.style.transform = `translateX(-${index * 100}%)`;
+    slides.forEach((slide, idx) => {
+      slide.classList.toggle('active', idx === index);
+    });
   }
 
   leftBtn.addEventListener('click', () => goTo(index - 1));
