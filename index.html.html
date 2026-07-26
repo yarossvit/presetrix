@@ -112,7 +112,8 @@
 
     function updateLogo(theme) {
       if (logoImg) {
-        logoImg.src = theme === 'dark' ? 'images/logo_white.png' : 'images/logo_black.png';
+        // Исправлено: для темной темы подставляем черный логотип, для светлой — белый
+        logoImg.src = theme === 'dark' ? 'images/logo_black.png' : 'images/logo_white.png';
       }
     }
 
