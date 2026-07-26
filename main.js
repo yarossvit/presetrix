@@ -342,8 +342,46 @@ function initShowMoreButton(){
   });
 }
 
+/* ---------- 0. ВИДЕО В ШАПКЕ (плавная смена роликов по кругу) ---------- */
+function initHeroVideo(){
+  const videos = [
+    document.getElementById('heroVideo0'),
+    document.getElementById('heroVideo1'),
+    document.getElementById('heroVideo2')
+  ].filter(Boolean);
+
+  if (videos.length === 0) return;
+
+  let current = 0;
+
+  function playCurrent(){
+    const v = videos[current];
+    v.currentTime = 0;
+    v.play().catch(() => {
+      // если браузер заблокировал автоплей — не критично, просто останется первый кадр
+    });
+  }
+
+  function goToNext(){
+    const prevIndex = current;
+    current = (current + 1) % videos.length;
+
+    videos[current].currentTime = 0;
+    videos[current].classList.add('is-active');
+    videos[prevIndex].classList.remove('is-active');
+    playCurrent();
+  }
+
+  videos.forEach((v, i) => {
+    v.addEventListener('ended', goToNext);
+  });
+
+  playCurrent();
+}
+
 /* ---------- ИНИЦИАЛИЗАЦИЯ ---------- */
 document.addEventListener('DOMContentLoaded', () => {
+  initHeroVideo();
   initLanguageSwitcher();
   initCarousel();
   initBeforeAfter();

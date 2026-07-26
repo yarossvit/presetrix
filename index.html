@@ -25,20 +25,37 @@
     <span data-i18n="saleBannerText">🔥 Sale! 35% OFF on all preset packs — Use code ETSY35</span>
   </div>
 
-  <div class="top-controls">
-    <div class="lang-switch">
-      <button class="lang-btn" data-lang="ua">UA</button>
-      <button class="lang-btn" data-lang="en">EN</button>
-      <button class="lang-btn" data-lang="ru">RU</button>
+  <header class="hero" id="hero">
+    <div class="hero-media" id="heroMedia">
+      <video class="hero-video is-active" id="heroVideo0" muted playsinline autoplay preload="auto">
+        <source src="videos/hero-video-1.mp4" type="video/mp4">
+      </video>
+      <video class="hero-video" id="heroVideo1" muted playsinline preload="auto">
+        <source src="videos/hero-video-2.mp4" type="video/mp4">
+      </video>
+      <video class="hero-video" id="heroVideo2" muted playsinline preload="auto">
+        <source src="videos/hero-video-3.mp4" type="video/mp4">
+      </video>
+      <div class="hero-overlay"></div>
     </div>
-    <button class="theme-btn" id="themeBtn" aria-label="Toggle Theme">🌙</button>
-  </div>
 
-  <header>
-    <img src="images/logo_black.png" alt="Presetrix" class="logo" id="logoImg">
-    <div class="eyebrow" data-i18n="eyebrow">Mobile & Desktop Lightroom Presets</div>
-    <h1>Presetrix</h1>
-    <p data-i18n="heroText">Ready-to-use presets for every mood.</p>
+    <div class="hero-top-row">
+      <img src="images/logo_white.png" alt="Presetrix" class="hero-logo" id="logoImg">
+      <div class="hero-controls">
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ua">UA</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="ru">RU</button>
+        </div>
+        <button class="theme-btn" id="themeBtn" aria-label="Toggle Theme">🌙</button>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow" data-i18n="eyebrow">Mobile & Desktop Lightroom Presets</div>
+      <h1 class="hero-title">PRESETRIX</h1>
+      <p class="hero-tagline" data-i18n="heroText">Ready-to-use presets for every mood.</p>
+    </div>
   </header>
 
   <section class="carousel-section">
@@ -109,21 +126,13 @@
   <script src="main.js"></script>
   <script>
     const themeBtn = document.getElementById('themeBtn');
-    const logoImg = document.getElementById('logoImg');
     const currentTheme = localStorage.getItem('theme') || 'light';
-
-    function updateLogo(theme) {
-      if (logoImg) {
-        logoImg.src = theme === 'dark' ? 'images/logo_white.png' : 'images/logo_black.png';
-      }
-    }
+    // логотип в шапке всегда белый — он лежит поверх видео с тёмной подложкой,
+    // и не должен переключаться вместе со светлой/тёмной темой всего сайта
 
     if (currentTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeBtn.textContent = '☀️';
-      updateLogo('dark');
-    } else {
-      updateLogo('light');
     }
 
     themeBtn.addEventListener('click', () => {
@@ -132,12 +141,10 @@
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
         themeBtn.textContent = '🌙';
-        updateLogo('light');
       } else {
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
         themeBtn.textContent = '☀️';
-        updateLogo('dark');
       }
     });
   </script>
