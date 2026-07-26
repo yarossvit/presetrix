@@ -41,8 +41,11 @@ a{color:inherit;text-decoration:none;}
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:12px;
+  gap:16px;
   padding:20px 20px 0;
+  position:relative;
+  max-width:400px;
+  margin:0 auto;
 }
 .lang-switch{
   display:flex;
@@ -61,8 +64,11 @@ a{color:inherit;text-decoration:none;}
   transition:all .2s ease;
 }
 .theme-btn{
-  padding:6px 10px;
+  padding:6px 12px;
   font-size:0.9rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .lang-btn:hover, .theme-btn:hover{
   border-color:var(--accent);
