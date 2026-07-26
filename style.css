@@ -131,9 +131,15 @@ a{color:inherit;text-decoration:none;}
 
 /* ---------- ВИДЕО-СЛАЙДЕР В ШАПКЕ ---------- */
 .video-hero-section{
+  width:100%;
+  padding:40px 20px 50px;
+  background:var(--bg-soft);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.video-hero-inner{
   max-width:900px;
-  margin:36px auto;
-  padding:0 50px;
+  margin:0 auto;
 }
 .video-slider-wrap{
   position:relative;
@@ -559,7 +565,8 @@ footer{
   .nav-tagline{font-size:0.72rem;}
   .hero-controls .lang-btn,
   .hero-controls .theme-btn{padding:5px 10px;font-size:0.65rem;}
-  .video-hero-section{padding:0 16px;margin:20px auto;}
+  .video-hero-section{padding:24px 0 30px;}
+  .video-hero-inner{padding:0 16px;}
   .nav-btn{display:none;}
   .carousel-card{width:190px;}
   .carousel-card:not(:first-child){margin-left:-55px;}
