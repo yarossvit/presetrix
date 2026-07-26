@@ -256,12 +256,18 @@ function buildShopCard(pack, extraClass, ribbonText){
   const card = document.createElement('div');
   card.className = 'shop-card' + (extraClass ? ' ' + extraClass : '');
   const t = TRANSLATIONS[currentLang];
+
+  // Формируем цену: если есть oldPrice, рисуем зачеркнутую старую и акционную новую
+  const priceHtml = pack.oldPrice 
+    ? `<span style="text-decoration: line-through; color: var(--muted); margin-right: 8px; font-size: 0.85rem;">${pack.oldPrice}</span> <span style="color: var(--accent); font-weight: bold;">${pack.price}</span>`
+    : `${pack.price}`;
+
   card.innerHTML = `
     ${ribbonText ? `<div class="bestseller-ribbon">${ribbonText}</div>` : ''}
     <img src="images/${pack.image}" alt="${pack.name}">
     <div class="info">
       <div class="name">${pack.name}</div>
-      <div class="price">${pack.price}</div>
+      <div class="price">${priceHtml}</div>
       <a class="buy-btn" href="${pack.etsyUrl}" target="_blank" rel="noopener">${t.buyBtn}</a>
     </div>
   `;
