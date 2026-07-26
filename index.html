@@ -83,32 +83,35 @@
 
   .card{
     flex:0 0 auto;
-    width:200px;
+    width:270px;
     border-radius:10px;
     overflow:hidden;
     background:var(--card);
-    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    box-shadow:0 8px 24px rgba(0,0,0,0.15);
     transition:transform .25s ease, box-shadow .25s ease;
     display:block;
   }
   .card:hover{
     transform:translateY(-6px);
-    box-shadow:0 14px 30px rgba(0,0,0,0.55);
+    box-shadow:0 14px 30px rgba(0,0,0,0.2);
   }
   .card img{
     width:100%;
-    height:300px;
+    height:390px;
     object-fit:cover;
     display:block;
     pointer-events:none;
   }
   .card .label{
-    padding:10px 12px;
+    padding:12px 14px;
     font-family:Arial,sans-serif;
-    font-size:0.75rem;
+    font-size:0.78rem;
     letter-spacing:1px;
     text-transform:uppercase;
     color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
   .nav-btn{
@@ -229,8 +232,8 @@
   @media (max-width:640px){
     h1{font-size:1.9rem;}
     .nav-btn{display:none;}
-    .card{width:150px;}
-    .card img{height:220px;}
+    .card{width:190px;}
+    .card img{height:280px;}
   }
 </style>
 </head>
@@ -263,9 +266,10 @@
 
   <script src="packs-data.js"></script>
   <script>
-    // ---------- Render carousel (showcase, uses all packs) ----------
+    // ---------- Render carousel (INFINITE: pack list tripled for seamless loop) ----------
     const carousel = document.getElementById('carousel');
-    PACKS.forEach(pack => {
+
+    function buildCard(pack){
       const a = document.createElement('a');
       a.className = 'card';
       a.href = pack.etsyUrl;
@@ -275,10 +279,15 @@
         <img src="images/${pack.image}" alt="${pack.name}">
         <div class="label">${pack.name}</div>
       `;
-      carousel.appendChild(a);
-    });
+      return a;
+    }
 
-    // ---------- Render full catalog grid (auto-grows with PACKS) ----------
+    // three copies back-to-back so we can always scroll seamlessly in either direction
+    for (let copy = 0; copy < 3; copy++){
+      PACKS.forEach(pack => carousel.appendChild(buildCard(pack)));
+    }
+
+    // ---------- Render full catalog grid (auto-grows with PACKS, NOT looped) ----------
     const catalogGrid = document.getElementById('catalogGrid');
     PACKS.forEach(pack => {
       const card = document.createElement('div');
@@ -293,6 +302,26 @@
       `;
       catalogGrid.appendChild(card);
     });
+
+    // ---------- Infinite loop setup ----------
+    // width of ONE copy of the pack list (measured after images may still be loading,
+    // so we recompute on load too in case sizes shift)
+    let singleSetWidth = carousel.scrollWidth / 3;
+    // start scrolled into the middle copy so both directions have room before wrapping
+    carousel.scrollLeft = singleSetWidth;
+
+    window.addEventListener('load', () => {
+      singleSetWidth = carousel.scrollWidth / 3;
+      carousel.scrollLeft = singleSetWidth;
+    });
+
+    function wrapScroll(){
+      if (carousel.scrollLeft >= singleSetWidth * 2){
+        carousel.scrollLeft -= singleSetWidth;
+      } else if (carousel.scrollLeft <= 0){
+        carousel.scrollLeft += singleSetWidth;
+      }
+    }
 
     // ---------- Follow-the-cursor scrolling for hero carousel ----------
     const wrap = document.getElementById('carouselWrap');
@@ -321,20 +350,22 @@
     function tick(){
       const speed = parseFloat(carousel.dataset.speed || 0);
       if (mouseActive && speed !== 0) {
-        const max = carousel.scrollWidth - carousel.clientWidth;
-        carousel.scrollLeft = Math.min(Math.max(carousel.scrollLeft + speed, 0), max);
+        carousel.scrollLeft = carousel.scrollLeft + speed;
+        wrapScroll();
       }
       requestAnimationFrame(tick);
     }
     carousel.dataset.speed = 0;
     tick();
 
-    const cardWidth = 224;
+    const cardWidth = 294; // card width + gap
     document.querySelector('.nav-left').addEventListener('click', () => {
       carousel.scrollBy({left: -cardWidth * 2, behavior:'smooth'});
+      setTimeout(wrapScroll, 400);
     });
     document.querySelector('.nav-right').addEventListener('click', () => {
       carousel.scrollBy({left: cardWidth * 2, behavior:'smooth'});
+      setTimeout(wrapScroll, 400);
     });
   </script>
 
