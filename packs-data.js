@@ -63,7 +63,7 @@ const PACKS = [
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
     price: "$8",
     category: "Свадебные",
-    bestseller: false
+    bestseller: true
   },
   {
     name: "Halloween Mood",
@@ -79,7 +79,7 @@ const PACKS = [
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
     price: "$8",
     category: "Портретные",
-    bestseller: false
+    bestseller: true
   },
   {
     name: "Rustic Wedding",
