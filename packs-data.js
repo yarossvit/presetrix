@@ -1,26 +1,5 @@
 /* =========================================================
    БАЗА ДАННЫХ ПРЕСЕТ-ПАКОВ
-   =========================================================
-   Чтобы ДОБАВИТЬ новый пак — скопируйте один блок { ... },
-   вставьте его в конец списка (перед закрывающей ]),
-   и заполните поля:
-
-   name       — название пака (показывается одинаково на всех языках)
-   image      — имя файла картинки, лежащей в папке images/
-   etsyUrl    — ссылка на товар в вашем Etsy-магазине
-   price      — цена для отображения на карточке (просто текст)
-   category   — ключ категории для вкладок-фильтров.
-                Разрешённые значения (пишите ТОЧНО так, латиницей):
-                  "portraits"    -> Портретные / Portraits / Портретні
-                  "interiors"    -> Interiors
-                  "weddings"     -> Свадебные / Weddings / Весільні
-                  "seasonal"     -> Seasonal
-                  "darkmoody"    -> Dark & Moody
-   bestseller — true, если пак должен попасть в блок
-                "Хит продаж" наверху страницы.
-
-   Названия категорий на трёх языках редактируются в main.js
-   (объект CATEGORY_LABELS) — здесь трогать не нужно.
    ========================================================= */
 
 const PACKS = [
@@ -28,7 +7,8 @@ const PACKS = [
     name: "Family",
     image: "Family_Thumbnail_-_2x3_Dark.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "portraits",
     bestseller: true
   },
@@ -36,7 +16,8 @@ const PACKS = [
     name: "Adventure Travel",
     image: "Adventure_Travel_Thumbnail_-_2x3_Dark.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "seasonal",
     bestseller: false
   },
@@ -44,7 +25,8 @@ const PACKS = [
     name: "Summer Beach",
     image: "Summer_Beach_Thumbnail_-_2x3_Dark.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "seasonal",
     bestseller: true
   },
@@ -52,7 +34,8 @@ const PACKS = [
     name: "Hiking Mood",
     image: "Hiking_Mood_Thumbnail_-_2x3_Dark.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "seasonal",
     bestseller: false
   },
@@ -60,7 +43,8 @@ const PACKS = [
     name: "Natural Wedding",
     image: "Natural_Wedding_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "weddings",
     bestseller: true
   },
@@ -68,7 +52,8 @@ const PACKS = [
     name: "Halloween Mood",
     image: "Halloween_Mood_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "darkmoody",
     bestseller: false
   },
@@ -76,7 +61,8 @@ const PACKS = [
     name: "Outdoor Natural",
     image: "Outdoor_Natural_Thumbnail_-_2x3_Dark.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "portraits",
     bestseller: true
   },
@@ -84,7 +70,8 @@ const PACKS = [
     name: "Rustic Wedding",
     image: "Rustic_Wedding_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "weddings",
     bestseller: false
   },
@@ -92,7 +79,8 @@ const PACKS = [
     name: "Disney Park",
     image: "Disney_Park_Thumbnail_-_2x3_Dark.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "portraits",
     bestseller: false
   },
@@ -100,7 +88,8 @@ const PACKS = [
     name: "Cosplay Style",
     image: "Cosplay_Style_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "portraits",
     bestseller: false
   },
@@ -108,7 +97,8 @@ const PACKS = [
     name: "Concert Live",
     image: "Concert_Live_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "darkmoody",
     bestseller: false
   },
@@ -116,7 +106,8 @@ const PACKS = [
     name: "Moody Forest",
     image: "Moody_Forest_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "darkmoody",
     bestseller: false
   },
@@ -124,7 +115,8 @@ const PACKS = [
     name: "Boho Wedding",
     image: "Boho_Wedding_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "weddings",
     bestseller: false
   },
@@ -132,7 +124,8 @@ const PACKS = [
     name: "Fresh Food",
     image: "Fresh_Food_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "interiors",
     bestseller: false
   },
@@ -140,7 +133,8 @@ const PACKS = [
     name: "Landscape",
     image: "Landscape_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "seasonal",
     bestseller: false
   },
@@ -148,7 +142,8 @@ const PACKS = [
     name: "Old Money",
     image: "Old_Money_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "interiors",
     bestseller: false
   },
@@ -156,19 +151,9 @@ const PACKS = [
     name: "Dark Loft",
     image: "Dark_Loft_Thumbnail_-_2x3.jpg",
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
-    price: "$8",
+    price: "$6.49",
+    oldPrice: "$9.99",
     category: "interiors",
     bestseller: false
   }
-
-  /* --- ДОБАВЛЯЙТЕ НОВЫЕ ПАКИ НИЖЕ ЭТОЙ СТРОКИ ---
-  ,{
-    name: "Название нового пака",
-    image: "имя-файла-картинки.jpg",
-    etsyUrl: "https://www.etsy.com/your-shop/listing/12345",
-    price: "$8",
-    category: "portraits",
-    bestseller: false
-  }
-  */
 ];

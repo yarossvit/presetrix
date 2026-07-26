@@ -8,6 +8,11 @@
 </head>
 <body>
 
+  <!-- БАННЕР РАСПРОДАЖИ -->
+  <div class="sale-banner">
+    <span data-i18n="saleBannerText">🔥 Sale! 35% OFF on all preset packs — Use code ETSY35</span>
+  </div>
+
   <div class="top-controls">
     <div class="lang-switch">
       <button class="lang-btn" data-lang="ru">RU</button>
@@ -91,14 +96,38 @@
   <script src="packs-data.js"></script>
   <script src="main.js"></script>
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const bestsellerGrid = document.getElementById('bestsellerGrid');
+      function createCardHTML(pack, isBestseller = false) {
+        const priceHtml = pack.oldPrice 
+          ? `<span style="text-decoration: line-through; color: var(--muted); margin-right: 8px; font-size: 0.85rem;">${pack.oldPrice}</span> <span style="color: var(--accent); font-weight: bold;">${pack.price}</span>`
+          : `${pack.price}`;
+
+        return `
+          <div class="shop-card ${isBestseller ? 'bestseller-card' : ''}">
+            ${isBestseller ? '<div class="bestseller-ribbon">Hit</div>' : ''}
+            <img src="images/${pack.image}" alt="${pack.name}" loading="lazy">
+            <div class="info">
+              <div class="name">${pack.name}</div>
+              <div class="price">${priceHtml}</div>
+              <a href="${pack.etsyUrl}" target="_blank" rel="noopener" class="buy-btn" data-i18n="buyBtn">Buy on Etsy</a>
+            </div>
+          </div>
+        `;
+      }
+      if (bestsellerGrid && typeof PACKS !== 'undefined') {
+        const bestsellers = PACKS.filter(p => p.bestseller);
+        bestsellerGrid.innerHTML = bestsellers.map(p => createCardHTML(p, true)).join('');
+      }
+    });
+  </script>
+  <script>
     const themeBtn = document.getElementById('themeBtn');
     const currentTheme = localStorage.getItem('theme') || 'light';
-    
     if (currentTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeBtn.textContent = '☀️';
     }
-
     themeBtn.addEventListener('click', () => {
       let theme = document.documentElement.getAttribute('data-theme');
       if (theme === 'dark') {
