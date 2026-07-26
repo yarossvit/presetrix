@@ -8,14 +8,17 @@
 </head>
 <body>
 
-  <div class="lang-switch">
-    <button class="lang-btn" data-lang="ru">RU</button>
-    <button class="lang-btn" data-lang="en">EN</button>
-    <button class="lang-btn" data-lang="ua">UA</button>
+  <div class="top-controls">
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="ru">RU</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ua">UA</button>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle Theme">🌙</button>
   </div>
 
   <header>
-    <img src="images/Logo_Black.png" alt="Presetrix" class="logo">
+    <img src="images/Logo_Black.png" alt="Presetrix" class="logo" id="logoImg">
     <div class="eyebrow" data-i18n="eyebrow">Mobile & Desktop Lightroom Presets</div>
     <h1>Presetrix</h1>
     <p data-i18n="heroText">Ready-to-use presets for every mood.</p>
@@ -87,6 +90,29 @@
 
   <script src="packs-data.js"></script>
   <script src="main.js"></script>
+  <script>
+    // Скрипт для переключения темы прямо в HTML
+    const themeBtn = document.getElementById('themeBtn');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeBtn.textContent = '☀️';
+    }
+
+    themeBtn.addEventListener('click', () => {
+      let theme = document.documentElement.getAttribute('data-theme');
+      if (theme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        themeBtn.textContent = '🌙';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeBtn.textContent = '☀️';
+      }
+    });
+  </script>
 
 </body>
 </html>
