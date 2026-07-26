@@ -168,10 +168,9 @@ function initCarousel(){
       const delta = cardCenter - centerX;
       const norm = Math.max(-1, Math.min(1, delta / (wrapRect.width / 2)));
       const dist = Math.abs(norm);
-      const translateY = dist * 46;      // чем дальше от центра, тем ниже
       const rotate = norm * 10;           // слева — против часовой, справа — по часовой
       const scale = 1 - dist * 0.16;
-      card.style.transform = `translateY(${translateY}px) rotate(${rotate}deg) scale(${scale})`;
+      card.style.transform = `rotate(${rotate}deg) scale(${scale})`;
       card.style.zIndex = Math.round((1 - dist) * 100) + 1;
     });
   }
