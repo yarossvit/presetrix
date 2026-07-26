@@ -142,14 +142,52 @@ function initCarousel(){
     PACKS.forEach(pack => carousel.appendChild(buildCard(pack)));
   }
 
+  const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
+
+  function getWrapCenterX(){
+    const r = wrap.getBoundingClientRect();
+    return r.left + r.width / 2;
+  }
+
+  // находим карточку, чей центр реально ближе всего к центру блока
+  // (считаем по факту отрисовки, а не по приблизительной арифметике —
+  // так центрирование остаётся точным независимо от паддингов/отступов)
+  function findClosest(){
+    const centerX = getWrapCenterX();
+    let closest = cards[0];
+    let closestDist = Infinity;
+    cards.forEach(card => {
+      const r = card.getBoundingClientRect();
+      const d = Math.abs((r.left + r.width / 2) - centerX);
+      if (d < closestDist){ closestDist = d; closest = card; }
+    });
+    return closest;
+  }
+
+  // довыравнивание: подгоняем scrollLeft так, чтобы ближайшая карточка
+  // оказалась РОВНО по центру (устраняет любой накопленный сдвиг)
+  function snapToCenter(smooth){
+    const card = findClosest();
+    const cardRect = card.getBoundingClientRect();
+    const delta = (cardRect.left + cardRect.width / 2) - getWrapCenterX();
+    if (Math.abs(delta) < 0.5) return;
+    if (smooth){
+      carousel.scrollBy({ left: delta, behavior: 'smooth' });
+    } else {
+      carousel.scrollLeft += delta;
+    }
+  }
+
   let singleSetWidth = carousel.scrollWidth / 3;
   // при каждой загрузке страницы по центру оказывается случайный пак
   const randomStart = Math.floor(Math.random() * PACKS.length) * cardWidth;
   carousel.scrollLeft = singleSetWidth + randomStart;
+  snapToCenter(false); // сразу доводим до точного центра, без анимации
 
   window.addEventListener('load', () => {
     singleSetWidth = carousel.scrollWidth / 3;
     carousel.scrollLeft = singleSetWidth + randomStart;
+    snapToCenter(false);
   });
 
   function wrapScroll(){
@@ -163,7 +201,6 @@ function initCarousel(){
   // ---- Ровный ряд без наклона: карточка ближе к центру — крупнее и лежит
   // поверх; чем дальше карточка от центра (в любую сторону), тем ниже
   // она в стопке (уходит "под" соседей), а не наоборот ----
-  const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
   function updateCoverflow(){
     const wrapRect = wrap.getBoundingClientRect();
     const centerX = wrapRect.left + wrapRect.width / 2;
@@ -203,6 +240,8 @@ function initCarousel(){
   wrap.addEventListener('mouseleave', () => {
     mouseActive = false;
     carousel.dataset.speed = 0;
+    // мышь ушла — плавно доводим ближайшую карточку точно по центру
+    setTimeout(() => snapToCenter(true), 60);
   });
 
   function tick(){
@@ -216,16 +255,16 @@ function initCarousel(){
   }
   carousel.dataset.speed = 0;
   tick();
-  window.addEventListener('resize', updateCoverflow);
+  window.addEventListener('resize', () => { updateCoverflow(); snapToCenter(false); });
   window.addEventListener('load', updateCoverflow);
 
   wrap.querySelector('.nav-left').addEventListener('click', () => {
     carousel.scrollBy({left: -cardWidth * 2, behavior:'smooth'});
-    setTimeout(wrapScroll, 400);
+    setTimeout(() => { wrapScroll(); snapToCenter(true); }, 400);
   });
   wrap.querySelector('.nav-right').addEventListener('click', () => {
     carousel.scrollBy({left: cardWidth * 2, behavior:'smooth'});
-    setTimeout(wrapScroll, 400);
+    setTimeout(() => { wrapScroll(); snapToCenter(true); }, 400);
   });
 }
 
