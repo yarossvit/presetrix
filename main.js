@@ -160,25 +160,25 @@ function initCarousel(){
     }
   }
 
-  // ---- Ровный ряд без наклона: выбранным (крупнее, поверх остальных)
-  // становится ровно ОДНА карточка — ближайшая к центру блока ----
+  // ---- Ровный ряд без наклона: карточка ближе к центру — крупнее и лежит
+  // поверх; чем дальше карточка от центра (в любую сторону), тем ниже
+  // она в стопке (уходит "под" соседей), а не наоборот ----
   const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
   function updateCoverflow(){
     const wrapRect = wrap.getBoundingClientRect();
     const centerX = wrapRect.left + wrapRect.width / 2;
-    let closest = null;
-    let closestDist = Infinity;
-    cards.forEach(card => {
+    const items = cards.map(card => {
       const cardRect = card.getBoundingClientRect();
       const cardCenter = cardRect.left + cardRect.width / 2;
-      const dist = Math.abs(cardCenter - centerX);
-      if (dist < closestDist){
-        closestDist = dist;
-        closest = card;
-      }
+      return { card, dist: Math.abs(cardCenter - centerX) };
     });
-    cards.forEach(card => {
-      card.classList.toggle('is-active', card === closest);
+    // сортируем от самой дальней к самой близкой — дальняя получает
+    // самый низкий z-index (оказывается внизу стопки), ближайшая — самый высокий
+    items.sort((a, b) => b.dist - a.dist);
+    let closest = items[items.length - 1].card;
+    items.forEach((item, idx) => {
+      item.card.style.zIndex = idx + 1;
+      item.card.classList.toggle('is-active', item.card === closest);
     });
   }
 
