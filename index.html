@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Presetrix — Lightroom Presets</title>
+
+  <!-- Иконка сайта (фавиконка) во вкладке браузера -->
+<link rel="icon" type="image/png" href="images/Logo_Black.png">
+
+  <!-- Open Graph превью для закладок, мессенджеров и соцсетей -->
+<meta property="og:title" content="Presetrix — Mobile & Desktop Lightroom Presets">
+<meta property="og:description" content="Ready-to-use presets for every mood. Professional Lightroom presets for your photos.">
+<meta property="og:image" content="images/Logo_Black.png">
+<meta property="og:type" content="website">
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -95,32 +105,6 @@
 
   <script src="packs-data.js"></script>
   <script src="main.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const bestsellerGrid = document.getElementById('bestsellerGrid');
-      function createCardHTML(pack, isBestseller = false) {
-        const priceHtml = pack.oldPrice 
-          ? `<span style="text-decoration: line-through; color: var(--muted); margin-right: 8px; font-size: 0.85rem;">${pack.oldPrice}</span> <span style="color: var(--accent); font-weight: bold;">${pack.price}</span>`
-          : `${pack.price}`;
-
-        return `
-          <div class="shop-card ${isBestseller ? 'bestseller-card' : ''}">
-            ${isBestseller ? '<div class="bestseller-ribbon">Hit</div>' : ''}
-            <img src="images/${pack.image}" alt="${pack.name}" loading="lazy">
-            <div class="info">
-              <div class="name">${pack.name}</div>
-              <div class="price">${priceHtml}</div>
-              <a href="${pack.etsyUrl}" target="_blank" rel="noopener" class="buy-btn" data-i18n="buyBtn">Buy on Etsy</a>
-            </div>
-          </div>
-        `;
-      }
-      if (bestsellerGrid && typeof PACKS !== 'undefined') {
-        const bestsellers = PACKS.filter(p => p.bestseller);
-        bestsellerGrid.innerHTML = bestsellers.map(p => createCardHTML(p, true)).join('');
-      }
-    });
-  </script>
   <script>
     const themeBtn = document.getElementById('themeBtn');
     const currentTheme = localStorage.getItem('theme') || 'light';
