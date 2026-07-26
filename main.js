@@ -135,17 +135,21 @@ function initCarousel(){
     return a;
   }
 
+  const cardWidth = 180; // эффективный шаг с учётом нахлёста карточек (270 - 90)
+
   // три копии подряд — чтобы можно было бесшовно крутить в любую сторону
   for (let copy = 0; copy < 3; copy++){
     PACKS.forEach(pack => carousel.appendChild(buildCard(pack)));
   }
 
   let singleSetWidth = carousel.scrollWidth / 3;
-  carousel.scrollLeft = singleSetWidth;
+  // при каждой загрузке страницы по центру оказывается случайный пак
+  const randomStart = Math.floor(Math.random() * PACKS.length) * cardWidth;
+  carousel.scrollLeft = singleSetWidth + randomStart;
 
   window.addEventListener('load', () => {
     singleSetWidth = carousel.scrollWidth / 3;
-    carousel.scrollLeft = singleSetWidth;
+    carousel.scrollLeft = singleSetWidth + randomStart;
   });
 
   function wrapScroll(){
@@ -156,22 +160,25 @@ function initCarousel(){
     }
   }
 
-  // ---- КОВЕРФЛОУ: центральный пак ровный и крупный,
-  // те что слева "стекают" вниз-влево, те что справа — вниз-вправо ----
+  // ---- Ровный ряд без наклона: выбранным (крупнее, поверх остальных)
+  // становится ровно ОДНА карточка — ближайшая к центру блока ----
   const cards = Array.from(carousel.querySelectorAll('.carousel-card'));
   function updateCoverflow(){
     const wrapRect = wrap.getBoundingClientRect();
     const centerX = wrapRect.left + wrapRect.width / 2;
+    let closest = null;
+    let closestDist = Infinity;
     cards.forEach(card => {
       const cardRect = card.getBoundingClientRect();
       const cardCenter = cardRect.left + cardRect.width / 2;
-      const delta = cardCenter - centerX;
-      const norm = Math.max(-1, Math.min(1, delta / (wrapRect.width / 2)));
-      const dist = Math.abs(norm);
-      const rotate = norm * 10;           // слева — против часовой, справа — по часовой
-      const scale = 1 - dist * 0.16;
-      card.style.transform = `rotate(${rotate}deg) scale(${scale})`;
-      card.style.zIndex = Math.round((1 - dist) * 100) + 1;
+      const dist = Math.abs(cardCenter - centerX);
+      if (dist < closestDist){
+        closestDist = dist;
+        closest = card;
+      }
+    });
+    cards.forEach(card => {
+      card.classList.toggle('is-active', card === closest);
     });
   }
 
@@ -212,7 +219,6 @@ function initCarousel(){
   window.addEventListener('resize', updateCoverflow);
   window.addEventListener('load', updateCoverflow);
 
-  const cardWidth = 180; // эффективный шаг с учётом нахлёста карточек
   wrap.querySelector('.nav-left').addEventListener('click', () => {
     carousel.scrollBy({left: -cardWidth * 2, behavior:'smooth'});
     setTimeout(wrapScroll, 400);
