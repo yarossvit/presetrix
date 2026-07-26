@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +26,24 @@
       <button class="nav-btn nav-left" aria-label="Previous">&#10094;</button>
       <div class="carousel" id="carousel"></div>
       <button class="nav-btn nav-right" aria-label="Next">&#10095;</button>
+    </div>
+  </section>
+
+  <section class="ba-section">
+    <div class="ba-inner">
+      <div class="section-title" data-i18n="baTitle">Before / After</div>
+      <div class="section-sub" data-i18n="baSub">Drag the slider to see the difference</div>
+      <div class="ba-container" id="baContainer">
+        <img src="images/after.jpg" class="ba-img ba-after" alt="After">
+        <div class="ba-before-wrap" id="baBeforeWrap">
+          <img src="images/before.jpg" class="ba-img ba-before" id="baBeforeImg" alt="Before">
+        </div>
+        <span class="ba-label ba-label-before" data-i18n="baBefore">Before</span>
+        <span class="ba-label ba-label-after" data-i18n="baAfter">After</span>
+        <div class="ba-handle" id="baHandle">
+          <div class="ba-handle-circle">&#8596;</div>
+        </div>
+      </div>
     </div>
   </section>
 

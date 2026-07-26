@@ -14,6 +14,10 @@ const TRANSLATIONS = {
   ru: {
     eyebrow: "Мобильные и десктопные пресеты Lightroom",
     heroText: "Готовые пресеты для любого настроения кадра — от свадеб до концертов. Выбирайте пак и переходите на Etsy для покупки.",
+    baTitle: "До / После",
+    baSub: "Двигайте слайдер мышкой, чтобы увидеть разницу",
+    baBefore: "До",
+    baAfter: "После",
     bestsellerTitle: "🔥 Хит продаж",
     bestsellerSub: "Самые популярные паки у наших клиентов",
     bestsellerRibbon: "Хит",
@@ -35,6 +39,10 @@ const TRANSLATIONS = {
   en: {
     eyebrow: "Mobile & Desktop Lightroom Presets",
     heroText: "Ready-to-use presets for every mood — from weddings to concerts. Pick a pack and head to Etsy to purchase.",
+    baTitle: "Before / After",
+    baSub: "Drag the slider with your mouse to see the difference",
+    baBefore: "Before",
+    baAfter: "After",
     bestsellerTitle: "🔥 Best Sellers",
     bestsellerSub: "The most popular packs among our customers",
     bestsellerRibbon: "Best",
@@ -56,6 +64,10 @@ const TRANSLATIONS = {
   ua: {
     eyebrow: "Мобільні та десктопні пресети Lightroom",
     heroText: "Готові пресети для будь-якого настрою кадру — від весіль до концертів. Обирайте пак і переходьте на Etsy для покупки.",
+    baTitle: "До / Після",
+    baSub: "Рухайте повзунок мишкою, щоб побачити різницю",
+    baBefore: "До",
+    baAfter: "Після",
     bestsellerTitle: "🔥 Хіт продажів",
     bestsellerSub: "Найпопулярніші паки серед наших клієнтів",
     bestsellerRibbon: "Хіт",
@@ -76,9 +88,9 @@ const TRANSLATIONS = {
   }
 };
 
-let currentLang = "ru";
+let currentLang = "ua";
 const CATEGORY_ORDER = ["all", "portraits", "interiors", "weddings", "seasonal", "darkmoody"];
-const INITIAL_VISIBLE = 9; // сколько паков показывать в каталоге до нажатия "Показать ещё"
+const INITIAL_VISIBLE = 12; // 4 колонки × 3 ряда — всегда полные ряды без "рваных" пустот
 
 /* ---------- 2. ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ---------- */
 function setLanguage(lang){
@@ -186,6 +198,59 @@ function initCarousel(){
   });
 }
 
+/* ---------- 3.5. СЛАЙДЕР "ДО / ПОСЛЕ" ---------- */
+function initBeforeAfter(){
+  const container = document.getElementById('baContainer');
+  const beforeWrap = document.getElementById('baBeforeWrap');
+  const beforeImg = document.getElementById('baBeforeImg');
+  const handle = document.getElementById('baHandle');
+
+  function setBeforeImgWidth(){
+    // картинка "до" внутри обрезанной обёртки должна быть шириной
+    // с весь контейнер, а не с текущую ширину обёртки — иначе она сожмётся
+    beforeImg.style.width = container.offsetWidth + 'px';
+  }
+
+  function setPosition(percent){
+    percent = Math.min(100, Math.max(0, percent));
+    beforeWrap.style.width = percent + '%';
+    handle.style.left = percent + '%';
+  }
+
+  setBeforeImgWidth();
+  setPosition(50);
+  window.addEventListener('resize', setBeforeImgWidth);
+  window.addEventListener('load', setBeforeImgWidth);
+
+  function percentFromEvent(clientX){
+    const rect = container.getBoundingClientRect();
+    return ((clientX - rect.left) / rect.width) * 100;
+  }
+
+  let dragging = false;
+
+  container.addEventListener('mousedown', (e) => {
+    dragging = true;
+    setPosition(percentFromEvent(e.clientX));
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    setPosition(percentFromEvent(e.clientX));
+  });
+  window.addEventListener('mouseup', () => { dragging = false; });
+
+  // тач-устройства
+  container.addEventListener('touchstart', (e) => {
+    dragging = true;
+    setPosition(percentFromEvent(e.touches[0].clientX));
+  });
+  container.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    setPosition(percentFromEvent(e.touches[0].clientX));
+  });
+  container.addEventListener('touchend', () => { dragging = false; });
+}
+
 /* ---------- 4. БЛОК "ХИТ ПРОДАЖ" ---------- */
 function buildShopCard(pack, extraClass, ribbonText){
   const card = document.createElement('div');
@@ -272,6 +337,7 @@ function initShowMoreButton(){
 document.addEventListener('DOMContentLoaded', () => {
   initLanguageSwitcher();
   initCarousel();
+  initBeforeAfter();
   initShowMoreButton();
   setLanguage(currentLang); // это же вызовет renderFilterTabs / renderCatalog / renderBestsellers
 });
