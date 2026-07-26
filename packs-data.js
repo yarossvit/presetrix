@@ -111,7 +111,7 @@ const PACKS = [
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
     price: "$8",
     category: "Dark & Moody",
-    bestseller: true
+    bestseller: false
   },
   {
     name: "Moody Forest",
@@ -127,7 +127,7 @@ const PACKS = [
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
     price: "$8",
     category: "Свадебные",
-    bestseller: true
+    bestseller: false
   },
   {
     name: "Fresh Food",
@@ -151,7 +151,7 @@ const PACKS = [
     etsyUrl: "https://www.etsy.com/your-shop/listing/PUT-LINK-HERE",
     price: "$8",
     category: "Interiors",
-    bestseller: true
+    bestseller: false
   },
   {
     name: "Dark Loft",
