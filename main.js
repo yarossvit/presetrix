@@ -191,11 +191,11 @@ function initCarousel(){
   tick();
 
   const cardWidth = 180; // эффективный шаг с учётом нахлёста карточек
-  document.querySelector('.nav-left').addEventListener('click', () => {
+  wrap.querySelector('.nav-left').addEventListener('click', () => {
     carousel.scrollBy({left: -cardWidth * 2, behavior:'smooth'});
     setTimeout(wrapScroll, 400);
   });
-  document.querySelector('.nav-right').addEventListener('click', () => {
+  wrap.querySelector('.nav-right').addEventListener('click', () => {
     carousel.scrollBy({left: cardWidth * 2, behavior:'smooth'});
     setTimeout(wrapScroll, 400);
   });
@@ -350,19 +350,21 @@ function initVideoSlider(){
 
   if (!track) return;
 
-  // каждое видео уже само по себе зациклено (атрибут loop) —
-  // здесь только прокрутка стрелками влево/вправо
-  function slideStep(){
-    const firstSlide = track.querySelector('.video-slide');
-    return firstSlide ? firstSlide.offsetWidth + 24 : 300; // +24 = gap между слайдами
+  const slides = Array.from(track.querySelectorAll('.video-slide'));
+  const total = slides.length;
+  let index = 0;
+
+  // Показываем только одно видео за раз (по центру, в размер блока),
+  // переключение стрелками — через translateX, а не свободный скролл.
+  function goTo(i){
+    index = (i + total) % total;
+    track.style.transform = `translateX(-${index * 100}%)`;
   }
 
-  leftBtn.addEventListener('click', () => {
-    track.scrollBy({ left: -slideStep(), behavior: 'smooth' });
-  });
-  rightBtn.addEventListener('click', () => {
-    track.scrollBy({ left: slideStep(), behavior: 'smooth' });
-  });
+  leftBtn.addEventListener('click', () => goTo(index - 1));
+  rightBtn.addEventListener('click', () => goTo(index + 1));
+
+  goTo(0);
 }
 
 /* ---------- ИНИЦИАЛИЗАЦИЯ ---------- */
