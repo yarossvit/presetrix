@@ -97,7 +97,7 @@
   }
   .card img{
     width:100%;
-    height:390px;
+    height:300px;
     object-fit:cover;
     display:block;
     pointer-events:none;
@@ -135,6 +135,114 @@
   .nav-btn:hover{background:rgba(217,160,102,0.85);}
   .nav-left{left:0;}
   .nav-right{right:0;}
+
+  /* ---------- BESTSELLERS SECTION ---------- */
+  .bestseller-section{
+    padding:20px 20px 60px;
+  }
+  .bestseller-inner{
+    max-width:1200px;
+    margin:0 auto;
+  }
+  .bestseller-title{
+    text-align:center;
+    font-size:1.8rem;
+    font-weight:400;
+    letter-spacing:1px;
+    margin-bottom:8px;
+  }
+  .bestseller-sub{
+    text-align:center;
+    font-family:Arial,sans-serif;
+    color:var(--muted);
+    font-size:0.9rem;
+    margin-bottom:40px;
+  }
+  .bestseller-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:28px;
+  }
+  .bestseller-card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--accent);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:transform .2s ease;
+  }
+  .bestseller-card:hover{
+    transform:translateY(-4px);
+  }
+  .bestseller-card img{
+    width:100%;
+    height:280px;
+    object-fit:cover;
+    display:block;
+  }
+  .bestseller-ribbon{
+    position:absolute;
+    top:14px;
+    left:-34px;
+    transform:rotate(-45deg);
+    background:var(--accent);
+    color:#fff;
+    font-family:Arial,sans-serif;
+    font-size:0.7rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:5px 40px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+  }
+  .bestseller-card .info{
+    padding:16px 18px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
+  }
+  .bestseller-card .name{
+    font-size:1.05rem;
+    letter-spacing:0.5px;
+  }
+  .bestseller-card .price{
+    font-family:Arial,sans-serif;
+    color:var(--accent-soft);
+    font-size:0.95rem;
+  }
+
+  /* ---------- FILTER TABS ---------- */
+  .filter-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:44px;
+  }
+  .filter-tab{
+    font-family:Arial,sans-serif;
+    font-size:0.8rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:10px 20px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    color:var(--muted);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .filter-tab:hover{
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+  .filter-tab.active{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+  }
 
   /* ---------- CATALOG ---------- */
   .catalog-section{
@@ -254,10 +362,19 @@
     </div>
   </section>
 
+  <section class="bestseller-section">
+    <div class="bestseller-inner">
+      <div class="bestseller-title">🔥 Хит продаж</div>
+      <div class="bestseller-sub">Самые популярные паки у наших клиентов</div>
+      <div class="bestseller-grid" id="bestsellerGrid"></div>
+    </div>
+  </section>
+
   <section class="catalog-section">
     <div class="catalog-inner">
       <div class="catalog-title">Все паки</div>
       <div class="catalog-sub">Нажмите «Купить на Etsy», чтобы перейти к оплате</div>
+      <div class="filter-tabs" id="filterTabs"></div>
       <div class="catalog-grid" id="catalogGrid"></div>
     </div>
   </section>
@@ -287,12 +404,13 @@
       PACKS.forEach(pack => carousel.appendChild(buildCard(pack)));
     }
 
-    // ---------- Render full catalog grid (auto-grows with PACKS, NOT looped) ----------
-    const catalogGrid = document.getElementById('catalogGrid');
-    PACKS.forEach(pack => {
+    // ---------- Render "Хит продаж" showcase (separate block, not badges) ----------
+    const bestsellerGrid = document.getElementById('bestsellerGrid');
+    PACKS.filter(p => p.bestseller).forEach(pack => {
       const card = document.createElement('div');
-      card.className = 'shop-card';
+      card.className = 'bestseller-card';
       card.innerHTML = `
+        <div class="bestseller-ribbon">Хит</div>
         <img src="images/${pack.image}" alt="${pack.name}">
         <div class="info">
           <div class="name">${pack.name}</div>
@@ -300,8 +418,51 @@
           <a class="buy-btn" href="${pack.etsyUrl}" target="_blank" rel="noopener">Купить на Etsy</a>
         </div>
       `;
-      catalogGrid.appendChild(card);
+      bestsellerGrid.appendChild(card);
     });
+
+    // ---------- Filter tabs ----------
+    const CATEGORIES = ["Все", "Портретные", "Interiors", "Свадебные", "Seasonal", "Dark & Moody"];
+    const filterTabs = document.getElementById('filterTabs');
+    let activeCategory = "Все";
+
+    CATEGORIES.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tab' + (cat === activeCategory ? ' active' : '');
+      btn.textContent = cat;
+      btn.addEventListener('click', () => {
+        activeCategory = cat;
+        document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderCatalog();
+      });
+      filterTabs.appendChild(btn);
+    });
+
+    // ---------- Render full catalog grid (filterable, auto-grows with PACKS) ----------
+    const catalogGrid = document.getElementById('catalogGrid');
+
+    function renderCatalog(){
+      catalogGrid.innerHTML = '';
+      const list = activeCategory === "Все"
+        ? PACKS
+        : PACKS.filter(p => p.category === activeCategory);
+
+      list.forEach(pack => {
+        const card = document.createElement('div');
+        card.className = 'shop-card';
+        card.innerHTML = `
+          <img src="images/${pack.image}" alt="${pack.name}">
+          <div class="info">
+            <div class="name">${pack.name}</div>
+            <div class="price">${pack.price}</div>
+            <a class="buy-btn" href="${pack.etsyUrl}" target="_blank" rel="noopener">Купить на Etsy</a>
+          </div>
+        `;
+        catalogGrid.appendChild(card);
+      });
+    }
+    renderCatalog();
 
     // ---------- Infinite loop setup ----------
     // width of ONE copy of the pack list (measured after images may still be loading,
