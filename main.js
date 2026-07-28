@@ -39,7 +39,7 @@ const TRANSLATIONS = {
     countdownSeconds: "Секунды",
     showMore: "Показать ещё",
     showLess: "Свернуть",
-    footerText: "© Presetrix — все пресеты продаются на Etsy",
+    footerText: "© 2026 Presetrix. Все права защищены.",
     categories: {
       all: "Все",
       portraits: "Портретные",
@@ -77,7 +77,7 @@ const TRANSLATIONS = {
     countdownSeconds: "Seconds",
     showMore: "Show more",
     showLess: "Show less",
-    footerText: "© Presetrix — all presets are sold on Etsy",
+    footerText: "© 2026 Presetrix. All rights reserved.",
     categories: {
       all: "All",
       portraits: "Portraits",
@@ -115,7 +115,7 @@ const TRANSLATIONS = {
     countdownSeconds: "Секунди",
     showMore: "Показати ще",
     showLess: "Згорнути",
-    footerText: "© Presetrix — усі пресети продаються на Etsy",
+    footerText: "© 2026 Presetrix. Всі права захищені.",
     categories: {
       all: "Усі",
       portraits: "Портретні",
