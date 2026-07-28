@@ -682,13 +682,52 @@ footer{
   .hero-slider-eyebrow{font-size:1.3rem;}
   .hero-slider-cta{padding:12px 28px;font-size:0.85rem;}
   .nav-btn{display:none;}
-  .carousel-card{width:190px;}
-  .carousel-card:not(:first-child){margin-left:-55px;}
-  .carousel-card img{height:280px;}
   .countdown-title{font-size:1.4rem;}
   .countdown-timer{gap:26px;}
   .countdown-number{font-size:2.1rem;}
   .carousel-heading-title{font-size:1.4rem;}
+
+  /* ---- Компактные карточки товаров (Хіт продажів / Усі паки) на мобильных ---- */
+  .shop-card img{
+    height:38vw;
+    max-height:190px;
+  }
+  .shop-card .info{
+    padding:12px 14px 14px;
+    gap:6px;
+  }
+  .shop-card .name{
+    font-size:0.9rem;
+  }
+  .shop-card .price{
+    font-size:0.85rem;
+  }
+  .buy-btn{
+    padding:9px 12px;
+    font-size:0.7rem;
+    letter-spacing:1px;
+  }
+  .bestseller-grid{gap:16px;}
+  .catalog-grid{gap:16px;}
+}
+
+/* ---- Карусель паков на мобильных: центральная карточка крупнее,
+   с видимыми "хвостиками" соседних карточек по бокам ---- */
+@media (max-width:768px){
+  .carousel-card{
+    width:74vw;
+    max-width:340px;
+  }
+  .carousel-card img{
+    height:auto;
+    aspect-ratio:9 / 10;
+  }
+  .carousel-card:not(:first-child){
+    margin-left:-20vw;
+  }
+  .carousel-wrap{
+    padding:0 26px;
+  }
 }
 
 /* ---------- МИКРОАНИМАЦИИ: плавное появление блоков при скролле ---------- */

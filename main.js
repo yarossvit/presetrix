@@ -314,12 +314,22 @@ function initCarousel(){
   window.addEventListener('resize', () => { updateCoverflow(); snapToCenter(false); });
   window.addEventListener('load', updateCoverflow);
 
+  // реальный шаг между карточками (ширина + отрицательный margin), а не
+  // фиксированное число — иначе на новых адаптивных мобильных размерах
+  // карточек стрелки будут либо недокручивать, либо перекручивать
+  function getStep(){
+    if (cards.length < 2) return cardWidth * 2;
+    const w = cards[0].getBoundingClientRect().width;
+    const marginLeft = parseFloat(getComputedStyle(cards[1]).marginLeft) || 0;
+    return w + marginLeft;
+  }
+
   wrap.querySelector('.nav-left').addEventListener('click', () => {
-    carousel.scrollBy({left: -cardWidth * 2, behavior:'smooth'});
+    carousel.scrollBy({left: -getStep() * 2, behavior:'smooth'});
     setTimeout(() => { wrapScroll(); snapToCenter(true); }, 400);
   });
   wrap.querySelector('.nav-right').addEventListener('click', () => {
-    carousel.scrollBy({left: cardWidth * 2, behavior:'smooth'});
+    carousel.scrollBy({left: getStep() * 2, behavior:'smooth'});
     setTimeout(() => { wrapScroll(); snapToCenter(true); }, 400);
   });
 }
@@ -501,6 +511,7 @@ function initCountdown(){
   const hoursEl = document.getElementById('cdHours');
   const minutesEl = document.getElementById('cdMinutes');
   const secondsEl = document.getElementById('cdSeconds');
+  if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
 
   function pad(n){ return String(n).padStart(2, '0'); }
 
@@ -542,18 +553,41 @@ function initScrollReveal(){
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0 }); // 0 — срабатывает как только элемент хоть немного показался.
+  // Раньше было 0.15: на мобильных, где сетки складываются в 1–2 колонки,
+  // высокие блоки (каталог, бестселлеры) никогда не показывали 15% своей
+  // площади на экране целиком — и блок так и оставался невидимым (opacity:0).
 
   items.forEach(el => observer.observe(el));
+
+  // страховка: даже если по какой-то причине наблюдатель не сработает
+  // (редкий баг браузера, очень необычная вёрстка и т.п.), через 2.5с
+  // всё равно показываем все блоки — контент не должен зависать невидимым
+  setTimeout(() => {
+    items.forEach(el => el.classList.add('is-visible'));
+  }, 2500);
 }
 
 /* ---------- ИНИЦИАЛИЗАЦИЯ ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-  initHeroSlider();
-  initLanguageSwitcher();
-  initCarousel();
-  initShowMoreButton();
-  initCountdown();
-  initScrollReveal();
-  setLanguage(currentLang); // это же вызовет renderFilterTabs / renderCatalog / renderBestsellers / renderTestimonials
+  // каждый блок инициализируется независимо: если один блок не находит
+  // свой элемент и падает с ошибкой, это НЕ должно мешать остальным —
+  // раньше одна ошибка (например, из-за несовпадения старых/новых файлов)
+  // обрывала всю цепочку и каталог/карусель/бестселлеры оставались пустыми
+  function safeInit(name, fn){
+    try {
+      fn();
+    } catch (err) {
+      console.error('Ошибка инициализации блока "' + name + '":', err);
+    }
+  }
+
+  safeInit('heroSlider', initHeroSlider);
+  safeInit('languageSwitcher', initLanguageSwitcher);
+  safeInit('carousel', initCarousel);
+  safeInit('showMoreButton', initShowMoreButton);
+  safeInit('countdown', initCountdown);
+  safeInit('scrollReveal', initScrollReveal);
+  // это же вызовет renderFilterTabs / renderCatalog / renderBestsellers / renderTestimonials
+  safeInit('language render', () => setLanguage(currentLang));
 });
