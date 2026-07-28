@@ -689,8 +689,8 @@ footer{
 
   /* ---- Компактные карточки товаров (Хіт продажів / Усі паки) на мобильных ---- */
   .shop-card img{
-    height:38vw;
-    max-height:190px;
+    height:auto;
+    aspect-ratio:27 / 28; /* та же пропорция, что и на десктопе (270×280) — фото больше не приплюснуто */
   }
   .shop-card .info{
     padding:12px 14px 14px;
@@ -714,6 +714,12 @@ footer{
 /* ---- Карусель паков на мобильных: центральная карточка крупнее,
    с видимыми "хвостиками" соседних карточек по бокам ---- */
 @media (max-width:768px){
+  .carousel-wrap{
+    padding:0 14px;
+  }
+  .carousel{
+    padding:20px 16px 30px;
+  }
   .carousel-card{
     width:74vw;
     max-width:340px;
@@ -723,10 +729,7 @@ footer{
     aspect-ratio:9 / 10;
   }
   .carousel-card:not(:first-child){
-    margin-left:-20vw;
-  }
-  .carousel-wrap{
-    padding:0 26px;
+    margin-left:-11vw;
   }
 }
 
