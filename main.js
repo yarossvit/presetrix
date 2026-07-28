@@ -25,6 +25,18 @@ const TRANSLATIONS = {
     catalogTitle: "Все паки",
     catalogSub: "Нажмите «Купить на Etsy», чтобы перейти к оплате",
     buyBtn: "Купить на Etsy",
+    heroCta: "Выбрать пак",
+    testimonialsTitle: "Отзывы наших клиентов",
+    testimonialsSub: "Что говорят фотографы о наших пресетах",
+    findStyleTitle: "Найдите свой идеальный стиль в один клик",
+    findStyleSub: "Коллекции профессиональных пресетов для Lightroom Mobile и Desktop под любое настроение.",
+    countdownEyebrow: "Акция активна",
+    countdownTitle: "Успейте купить со скидкой",
+    countdownCta: "Купить сейчас",
+    countdownDays: "Дни",
+    countdownHours: "Часы",
+    countdownMinutes: "Минуты",
+    countdownSeconds: "Секунды",
     showMore: "Показать ещё",
     showLess: "Свернуть",
     footerText: "© Presetrix — все пресеты продаются на Etsy",
@@ -51,6 +63,18 @@ const TRANSLATIONS = {
     catalogTitle: "All Packs",
     catalogSub: "Click “Buy on Etsy” to proceed to checkout",
     buyBtn: "Buy on Etsy",
+    heroCta: "Choose a pack",
+    testimonialsTitle: "Our Happy Customers",
+    testimonialsSub: "What photographers say about our presets",
+    findStyleTitle: "Find your perfect style in one click",
+    findStyleSub: "Collections of professional Lightroom Mobile & Desktop presets for every mood.",
+    countdownEyebrow: "Sale is on",
+    countdownTitle: "Shop the sale before it ends",
+    countdownCta: "Shop now",
+    countdownDays: "Days",
+    countdownHours: "Hours",
+    countdownMinutes: "Minutes",
+    countdownSeconds: "Seconds",
     showMore: "Show more",
     showLess: "Show less",
     footerText: "© Presetrix — all presets are sold on Etsy",
@@ -77,6 +101,18 @@ const TRANSLATIONS = {
     catalogTitle: "Усі паки",
     catalogSub: "Натисніть «Купити на Etsy», щоб перейти до оплати",
     buyBtn: "Купити на Etsy",
+    heroCta: "Обрати пак",
+    testimonialsTitle: "Відгуки наших клієнтів",
+    testimonialsSub: "Що фотографи кажуть про наші пресети",
+    findStyleTitle: "Знайдіть свій ідеальний стиль в один клік",
+    findStyleSub: "Колекції професійних пресетів для Lightroom Mobile та Desktop під будь-який настрій.",
+    countdownEyebrow: "Акція триває",
+    countdownTitle: "Встигніть купити зі знижкою",
+    countdownCta: "Купити зараз",
+    countdownDays: "Дні",
+    countdownHours: "Години",
+    countdownMinutes: "Хвилини",
+    countdownSeconds: "Секунди",
     showMore: "Показати ще",
     showLess: "Згорнути",
     footerText: "© Presetrix — усі пресети продаються на Etsy",
@@ -89,6 +125,25 @@ const TRANSLATIONS = {
       darkmoody: "Dark & Moody"
     }
   }
+};
+
+/* ---------- ВІДГУКИ КЛІЄНТІВ ---------- */
+const TESTIMONIALS = {
+  ru: [
+    { name: "Марина К.", quote: "Пресеты легли идеально на свадебные фото — цвет кожи натуральный, атмосфера сразу праздничная. Больше не трачу часы на обработку." },
+    { name: "Олег П.", quote: "Beру Concert Live для съёмок с концертов — свет и неон выглядят кинематографично буквально за пару кликов." },
+    { name: "Ирина С.", quote: "Купила Outdoor Natural — идеально для семейных прогулочных фотосессий. Установка простая, инструкция понятная." }
+  ],
+  en: [
+    { name: "Marina K.", quote: "The presets nailed my wedding photos — natural skin tones and an instantly festive mood. I no longer spend hours editing." },
+    { name: "Oleg P.", quote: "I use Concert Live for gig photography — the lights and neon look cinematic in just a couple of clicks." },
+    { name: "Irina S.", quote: "Got the Outdoor Natural pack — perfect for family walks and lifestyle sessions. Easy to install, clear instructions." }
+  ],
+  ua: [
+    { name: "Марина К.", quote: "Пресети ідеально лягли на весільні фото — натуральний відтінок шкіри, одразу святкова атмосфера. Більше не витрачаю години на обробку." },
+    { name: "Олег П.", quote: "Беру Concert Live для зйомок з концертів — світло і неон виглядають кінематографічно буквально за пару кліків." },
+    { name: "Ірина С.", quote: "Купила Outdoor Natural — ідеально для сімейних прогулянкових фотосесій. Встановлення просте, інструкція зрозуміла." }
+  ]
 };
 
 let currentLang = "ua";
@@ -112,6 +167,7 @@ function setLanguage(lang){
   renderFilterTabs();
   renderCatalog();
   renderBestsellers();
+  renderTestimonials();
 }
 
 function initLanguageSwitcher(){
@@ -268,59 +324,6 @@ function initCarousel(){
   });
 }
 
-/* ---------- 3.5. СЛАЙДЕР "ДО / ПОСЛЕ" ---------- */
-function initBeforeAfter(){
-  const container = document.getElementById('baContainer');
-  const beforeWrap = document.getElementById('baBeforeWrap');
-  const beforeImg = document.getElementById('baBeforeImg');
-  const handle = document.getElementById('baHandle');
-
-  function setBeforeImgWidth(){
-    // картинка "до" внутри обрезанной обёртки должна быть шириной
-    // с весь контейнер, а не с текущую ширину обёртки — иначе она сожмётся
-    beforeImg.style.width = container.offsetWidth + 'px';
-  }
-
-  function setPosition(percent){
-    percent = Math.min(100, Math.max(0, percent));
-    beforeWrap.style.width = percent + '%';
-    handle.style.left = percent + '%';
-  }
-
-  setBeforeImgWidth();
-  setPosition(50);
-  window.addEventListener('resize', setBeforeImgWidth);
-  window.addEventListener('load', setBeforeImgWidth);
-
-  function percentFromEvent(clientX){
-    const rect = container.getBoundingClientRect();
-    return ((clientX - rect.left) / rect.width) * 100;
-  }
-
-  let dragging = false;
-
-  container.addEventListener('mousedown', (e) => {
-    dragging = true;
-    setPosition(percentFromEvent(e.clientX));
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!dragging) return;
-    setPosition(percentFromEvent(e.clientX));
-  });
-  window.addEventListener('mouseup', () => { dragging = false; });
-
-  // тач-устройства
-  container.addEventListener('touchstart', (e) => {
-    dragging = true;
-    setPosition(percentFromEvent(e.touches[0].clientX));
-  });
-  container.addEventListener('touchmove', (e) => {
-    if (!dragging) return;
-    setPosition(percentFromEvent(e.touches[0].clientX));
-  });
-  container.addEventListener('touchend', () => { dragging = false; });
-}
-
 /* ---------- 4. БЛОК "ХИТ ПРОДАЖ" ---------- */
 function buildShopCard(pack, extraClass, ribbonText){
   const card = document.createElement('div');
@@ -350,6 +353,24 @@ function renderBestsellers(){
   const t = TRANSLATIONS[currentLang];
   PACKS.filter(p => p.bestseller).forEach(pack => {
     grid.appendChild(buildShopCard(pack, 'bestseller-card', t.bestsellerRibbon));
+  });
+}
+
+/* ---------- 4.5. ВІДГУКИ КЛІЄНТІВ ---------- */
+function renderTestimonials(){
+  const grid = document.getElementById('testimonialsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const items = TESTIMONIALS[currentLang] || TESTIMONIALS.ua;
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'testimonial-card';
+    card.innerHTML = `
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-quote">${item.quote}</div>
+      <div class="testimonial-name">${item.name}</div>
+    `;
+    grid.appendChild(card);
   });
 }
 
@@ -409,39 +430,130 @@ function initShowMoreButton(){
   });
 }
 
-/* ---------- 0. ВИДЕО-СЛАЙДЕР В ШАПКЕ ---------- */
-function initVideoSlider(){
-  const track = document.getElementById('videoSliderTrack');
-  const leftBtn = document.getElementById('videoSliderLeft');
-  const rightBtn = document.getElementById('videoSliderRight');
+/* ---------- 0. ГЛАВНЫЙ СЛАЙДЕР-ШАПКА (изображения) ---------- */
+function initHeroSlider(){
+  const track = document.getElementById('heroSliderTrack');
+  const leftBtn = document.getElementById('heroSliderLeft');
+  const rightBtn = document.getElementById('heroSliderRight');
+  const dotsWrap = document.getElementById('heroSliderDots');
+  const section = document.getElementById('heroSliderSection');
 
   if (!track) return;
 
-  const slides = Array.from(track.querySelectorAll('.video-slide'));
+  const slides = Array.from(track.querySelectorAll('.hero-slide'));
   const total = slides.length;
   let index = 0;
+  let timer = null;
 
-  // Видео всегда остаётся на одном месте — переключаем только то,
-  // какой слайд видимый (плавный переход прозрачности), без сдвига блока.
+  // строим точки-индикаторы под слайдер
+  const dots = slides.map((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'hero-slider-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+    return dot;
+  });
+
+  // картинка всегда остаётся на одном месте — переключаем только то,
+  // какой слайд видимый (плавный переход прозрачности)
   function goTo(i){
     index = (i + total) % total;
-    slides.forEach((slide, idx) => {
-      slide.classList.toggle('active', idx === index);
-    });
+    slides.forEach((slide, idx) => slide.classList.toggle('active', idx === index));
+    dots.forEach((dot, idx) => dot.classList.toggle('active', idx === index));
   }
 
-  leftBtn.addEventListener('click', () => goTo(index - 1));
-  rightBtn.addEventListener('click', () => goTo(index + 1));
+  function startAutoplay(){
+    stopAutoplay();
+    timer = setInterval(() => goTo(index + 1), 5000);
+  }
+  function stopAutoplay(){
+    if (timer) clearInterval(timer);
+  }
+
+  leftBtn.addEventListener('click', () => { goTo(index - 1); startAutoplay(); });
+  rightBtn.addEventListener('click', () => { goTo(index + 1); startAutoplay(); });
+
+  section.addEventListener('mouseenter', stopAutoplay);
+  section.addEventListener('mouseleave', startAutoplay);
 
   goTo(0);
+  startAutoplay();
+}
+
+/* ---------- ТАЙМЕР АКЦИИ ---------- */
+function initCountdown(){
+  const el = document.getElementById('countdownTimer');
+  if (!el) return;
+
+  // таймер отсчитывает фиксированный интервал от момента открытия страницы —
+  // хранится в localStorage, чтобы при обновлении страницы не сбрасывался заново
+  const DURATION_MS = 3 * 24 * 60 * 60 * 1000; // 3 дня
+  const STORAGE_KEY = 'presetrixSaleDeadline';
+
+  let deadline = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+  if (!deadline || deadline < Date.now()){
+    deadline = Date.now() + DURATION_MS;
+    localStorage.setItem(STORAGE_KEY, String(deadline));
+  }
+
+  const daysEl = document.getElementById('cdDays');
+  const hoursEl = document.getElementById('cdHours');
+  const minutesEl = document.getElementById('cdMinutes');
+  const secondsEl = document.getElementById('cdSeconds');
+
+  function pad(n){ return String(n).padStart(2, '0'); }
+
+  function tick(){
+    const diff = Math.max(0, deadline - Date.now());
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    daysEl.textContent = pad(days);
+    hoursEl.textContent = pad(hours);
+    minutesEl.textContent = pad(minutes);
+    secondsEl.textContent = pad(seconds);
+
+    if (diff <= 0){
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ---------- МИКРОАНИМАЦИИ: плавное появление блоков при скролле ---------- */
+function initScrollReveal(){
+  const items = document.querySelectorAll('.reveal');
+  if (!items.length) return;
+
+  if (!('IntersectionObserver' in window)){
+    items.forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  items.forEach(el => observer.observe(el));
 }
 
 /* ---------- ИНИЦИАЛИЗАЦИЯ ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-  initVideoSlider();
+  initHeroSlider();
   initLanguageSwitcher();
   initCarousel();
-  initBeforeAfter();
   initShowMoreButton();
-  setLanguage(currentLang); // это же вызовет renderFilterTabs / renderCatalog / renderBestsellers
+  initCountdown();
+  initScrollReveal();
+  setLanguage(currentLang); // это же вызовет renderFilterTabs / renderCatalog / renderBestsellers / renderTestimonials
 });

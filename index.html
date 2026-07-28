@@ -16,7 +16,7 @@
 <meta property="og:image" content="images/logo_white.png"> <!-- ВАЖНО: перед публикацией замените на ПОЛНУЮ ссылку, например https://вашсайт.ru/images/logo_white.png — соцсети и мессенджеры не подхватят превью по относительному пути -->
 <meta property="og:type" content="website">
 
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -42,36 +42,56 @@
     </div>
   </nav>
 
-  <!-- ВИДЕО-СЛАЙДЕР В ШАПКЕ -->
-  <section class="video-hero-section">
-    <div class="video-hero-inner">
-      <div class="video-slider-wrap" id="videoSliderWrap">
-        <button class="nav-btn nav-left" id="videoSliderLeft" aria-label="Previous">&#10094;</button>
+  <!-- ГЛАВНЫЙ СЛАЙДЕР-ШАПКА (изображения, во всю ширину) -->
+  <section class="hero-slider-section" id="heroSliderSection">
+    <div class="hero-slider-track" id="heroSliderTrack">
+      <div class="hero-slide active" style="background-image:url('images/hero-slide-1.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('images/hero-slide-2.jpg')"></div>
+    </div>
 
-        <div class="video-slider-track" id="videoSliderTrack">
-          <div class="video-slide">
-            <video muted loop autoplay playsinline preload="auto">
-              <source src="videos/hero-video-2.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="video-slide">
-            <video muted loop autoplay playsinline preload="auto">
-              <source src="videos/hero-video-1.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="video-slide">
-            <video muted loop autoplay playsinline preload="auto">
-              <source src="videos/hero-video-3.mp4" type="video/mp4">
-            </video>
-          </div>
+    <div class="hero-slider-overlay">
+      <div class="hero-slider-eyebrow" data-i18n="eyebrow">Mobile &amp; Desktop Lightroom Presets</div>
+      <a href="#catalogSection" class="hero-slider-cta" data-i18n="heroCta">Choose a pack</a>
+    </div>
+
+    <button class="nav-btn nav-left" id="heroSliderLeft" aria-label="Previous">&#10094;</button>
+    <button class="nav-btn nav-right" id="heroSliderRight" aria-label="Next">&#10095;</button>
+
+    <div class="hero-slider-dots" id="heroSliderDots"></div>
+  </section>
+
+  <!-- ТАЙМЕР АКЦИИ -->
+  <section class="countdown-section">
+    <div class="countdown-inner reveal">
+      <div class="countdown-eyebrow" data-i18n="countdownEyebrow">Sale is on</div>
+      <div class="countdown-title" data-i18n="countdownTitle">Shop the sale before it ends</div>
+      <div class="countdown-timer" id="countdownTimer">
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cdDays">00</span>
+          <span class="countdown-label" data-i18n="countdownDays">Days</span>
         </div>
-
-        <button class="nav-btn nav-right" id="videoSliderRight" aria-label="Next">&#10095;</button>
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cdHours">00</span>
+          <span class="countdown-label" data-i18n="countdownHours">Hours</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cdMinutes">00</span>
+          <span class="countdown-label" data-i18n="countdownMinutes">Minutes</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-number" id="cdSeconds">00</span>
+          <span class="countdown-label" data-i18n="countdownSeconds">Seconds</span>
+        </div>
       </div>
+      <a href="#catalogSection" class="countdown-cta" data-i18n="countdownCta">Shop now</a>
     </div>
   </section>
 
   <section class="carousel-section">
+    <div class="carousel-heading reveal">
+      <div class="carousel-heading-title" data-i18n="findStyleTitle">Find your perfect style in one click</div>
+      <div class="carousel-heading-sub" data-i18n="findStyleSub">Collections of professional Lightroom Mobile &amp; Desktop presets for every mood.</div>
+    </div>
     <div class="carousel-wrap" id="carouselWrap">
       <button class="nav-btn nav-left" aria-label="Previous">&#10094;</button>
       <div class="carousel" id="carousel"></div>
@@ -79,34 +99,16 @@
     </div>
   </section>
 
-  <section class="ba-section">
-    <div class="ba-inner">
-      <div class="section-title" data-i18n="baTitle">Before / After</div>
-      <div class="section-sub" data-i18n="baSub">Drag the slider to see the difference</div>
-      <div class="ba-container" id="baContainer">
-        <img src="images/after.jpg" class="ba-img ba-after" alt="After">
-        <div class="ba-before-wrap" id="baBeforeWrap">
-          <img src="images/before.jpg" class="ba-img ba-before" id="baBeforeImg" alt="Before">
-        </div>
-        <span class="ba-label ba-label-before" data-i18n="baBefore">Before</span>
-        <span class="ba-label ba-label-after" data-i18n="baAfter">After</span>
-        <div class="ba-handle" id="baHandle">
-          <div class="ba-handle-circle">&#8596;</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="bestseller-section">
-    <div class="bestseller-inner">
+    <div class="bestseller-inner reveal">
       <div class="section-title" data-i18n="bestsellerTitle">Best Sellers</div>
       <div class="section-sub" data-i18n="bestsellerSub">The most popular packs</div>
       <div class="bestseller-grid" id="bestsellerGrid"></div>
     </div>
   </section>
 
-  <section class="catalog-section">
-    <div class="catalog-inner">
+  <section class="catalog-section" id="catalogSection">
+    <div class="catalog-inner reveal">
       <div class="section-title" data-i18n="catalogTitle">All Packs</div>
       <div class="section-sub" data-i18n="catalogSub">Click Buy on Etsy</div>
       <div class="filter-tabs" id="filterTabs"></div>
@@ -114,6 +116,14 @@
       <div class="show-more-wrap" id="showMoreWrap">
         <button class="show-more-btn" id="showMoreBtn">Show more</button>
       </div>
+    </div>
+  </section>
+
+  <section class="testimonials-section">
+    <div class="testimonials-inner reveal">
+      <div class="section-title" data-i18n="testimonialsTitle">Our Happy Customers</div>
+      <div class="section-sub" data-i18n="testimonialsSub">What photographers say about our presets</div>
+      <div class="testimonials-grid" id="testimonialsGrid"></div>
     </div>
   </section>
 
@@ -135,8 +145,8 @@
     <span data-i18n="footerText">© Presetrix</span>
   </footer>
 
-  <script src="packs-data.js?v=7"></script>
-  <script src="main.js?v=7"></script>
+  <script src="packs-data.js?v=9"></script>
+  <script src="main.js?v=9"></script>
   <script>
     const themeBtn = document.getElementById('themeBtn');
     const logoImg = document.getElementById('logoImg');
